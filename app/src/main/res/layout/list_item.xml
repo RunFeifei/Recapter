@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="50dp"
     android:orientation="vertical"
-    tools:context="com.fei.root.recapter.MainActivity"
     >
 
     <TextView
@@ -14,13 +12,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="Debug"
-        android:onClick="onClick"
-        />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:textColor="@color/colorPrimary"
         />
 
 </LinearLayout>

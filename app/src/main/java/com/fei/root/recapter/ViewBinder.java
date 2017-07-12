@@ -41,6 +41,9 @@ public class ViewBinder {
             }
             int id = getFieldId(appRIdclass, field.getName(), binder.id());
             View view = findView(rootView, id);
+            if (view == null) {
+                throwException("invalid id");
+            }
             field.setAccessible(true);
             try {
                 field.set(viewHolder, view);
