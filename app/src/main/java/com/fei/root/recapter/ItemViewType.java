@@ -15,7 +15,7 @@ import static com.fei.root.recapter.ItemViewType.ITEM;
 @Target(ElementType.METHOD)
 @IntDef({HEADER, FOOTER, ITEM})
 public @interface ItemViewType {
-    int HEADER = 0;
-    int FOOTER = 1;
-    int ITEM = 2;
+    int ITEM = -1;
+    int HEADER = 1000;
+    int FOOTER = 2000;
 }

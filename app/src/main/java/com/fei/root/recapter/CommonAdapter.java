@@ -1,22 +1,26 @@
 package com.fei.root.recapter;
 
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by PengFeifei on 17-7-12.
  */
 
-public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHolder> {
+public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHolder> implements AdapterAction<Data> {
 
-    private List<Data> lisData;
+    protected List<Data> lisData;
     private int layoutId;
 
-    private OnItemClick onItemClick;
+    private RecyclerView recyclerView;
+
+    private AdapterListeners.OnItemClick onItemClick;
+    private AdapterListeners.OnItemLongClick onItemLongClick;
 
     public CommonAdapter(List<Data> lisData, @LayoutRes int layoutId) {
         this.lisData = lisData;
@@ -30,18 +34,18 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        holder.itemView.setOnClickListener((view) -> {
+        holder.itemView.setOnClickListener(view -> {
             if (onItemClick != null) {
-                onItemClick.onOItemClick(position);
+                onItemClick.onItemClick(position);
             }
         });
+        holder.itemView.setOnLongClickListener(view -> {
+            if (onItemLongClick != null) {
+                return onItemLongClick.onItemLongClick(position);
+            }
+            return false;
+        });
         convert(holder, lisData.get(position), position);
-    }
-
-    // TODO: 17-7-13
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
     }
 
     @Override
@@ -51,32 +55,79 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     protected abstract void convert(CommonHolder holder, Data data, int position);
 
-
-    public void insertItem(int position, Data data) {
+    @Override
+    public void appendItem(Data data) {
         if (lisData == null) {
+            lisData = new ArrayList<Data>();
+        }
+        lisData.add(data);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void appendItems(List<Data> datas) {
+        if (lisData == null) {
+            lisData = new ArrayList<Data>();
+        }
+        lisData.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void insertItem(int position, Data data) {
+        if (size(lisData) <= position) {
             return;
         }
         lisData.add(position, data);
         notifyItemInserted(position);
     }
 
+    @Override
     public void removeItem(int position) {
-        if (lisData == null || lisData.size() <= position) {
+        if (size(lisData) <= position) {
             return;
         }
         lisData.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void setOnItemClick(@NonNull OnItemClick onItemClick) {
+    @Override
+    public void updateItem(int positon, Data data) {
+        if (size(lisData)<=positon) {
+            return;
+        }
+        lisData.set(positon,data);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setOnItemClick(AdapterListeners.OnItemClick onItemClick) {
         if (onItemClick == null) {
             throw new NullPointerException("onItemClick can not be null");
         }
         this.onItemClick = onItemClick;
     }
 
-    public interface OnItemClick {
-        void onOItemClick(int Position);
+    @Override
+    public void setOnItemLongClick(AdapterListeners.OnItemLongClick onItemLongClick) {
+        if (onItemLongClick == null) {
+            throw new NullPointerException("onItemClick can not be null");
+        }
+        this.onItemLongClick = onItemLongClick;
     }
 
+    @Override
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    private int size(Collection collection) {
+        return collection == null ? 0 : collection.size();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
 }

@@ -1,6 +1,9 @@
 package com.fei.root.recapter;
 
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
@@ -16,7 +19,7 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
 
     private SparseArray<View> views;
 
-    private CommonHolder(View itemView) {
+    private CommonHolder(@NonNull View itemView) {
         super(itemView);
         views = new SparseArray<>();
     }
@@ -30,19 +33,19 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
         return new CommonHolder(itemView);
     }
 
-    public CommonHolder setText(int viewId, String text) {
+    public CommonHolder setText(int viewId, CharSequence text) {
         TextView tv = findView(viewId);
         tv.setText(text);
         return this;
     }
 
-    public CommonHolder setImageResource(int viewId, int resId) {
+    public CommonHolder setImageResource(int viewId,@DrawableRes int resId) {
         ImageView view = findView(viewId);
         view.setImageResource(resId);
         return this;
     }
 
-    public CommonHolder setTextColor(int viewId, int textColor) {
+    public CommonHolder setTextColor(int viewId,@ColorInt int textColor) {
         TextView view = findView(viewId);
         view.setTextColor(textColor);
         return this;
