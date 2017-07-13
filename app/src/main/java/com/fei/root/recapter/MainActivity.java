@@ -35,23 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
         commonAdapter = new CommonAdapter<String>(list, R.layout.list_item) {
             @Override
-            protected CommonHolder<String> bindData(View itemView) {
-                return new CommonHolder<String>(itemView) {
-                    @Binder
-                    private TextView btn;
-
-                    @Override
-                    protected void bindData(String s) {
-                        btn.setText(s);
-                    }
-                };
+            protected void convert(CommonHolder holder, String s, int position) {
+                holder.setText(R.id.btn,s);
             }
         };
         recyclerView.setAdapter(commonAdapter);
     }
 
     public void onClick(View view) {
-        commonAdapter.insertItem(1,"ss");
+        commonAdapter.insertItem(1, "ss");
     }
 
 }

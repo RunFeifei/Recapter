@@ -3,7 +3,6 @@ package com.fei.root.recapter;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -26,8 +25,7 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = RecapterApp.getlayoutInflate().inflate(layoutId, parent, false);
-        return bindData(itemView);
+        return CommonHolder.create(parent, layoutId);
     }
 
     @Override
@@ -37,13 +35,21 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
                 onItemClick.onOItemClick(position);
             }
         });
-        holder.bindData(lisData.get(position));
+        convert(holder, lisData.get(position), position);
+    }
+
+    // TODO: 17-7-13
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @Override
     public int getItemCount() {
         return lisData == null ? 0 : lisData.size();
     }
+
+    protected abstract void convert(CommonHolder holder, Data data, int position);
 
 
     public void insertItem(int position, Data data) {
@@ -73,5 +79,4 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
         void onOItemClick(int Position);
     }
 
-    protected abstract CommonHolder<Data> bindData(View itemView);
 }
