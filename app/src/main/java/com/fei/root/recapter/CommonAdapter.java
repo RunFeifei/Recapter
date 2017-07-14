@@ -34,17 +34,12 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        holder.itemView.setOnClickListener(view -> {
-            if (onItemClick != null) {
-                onItemClick.onItemClick(position);
-            }
-        });
-        holder.itemView.setOnLongClickListener(view -> {
-            if (onItemLongClick != null) {
-                return onItemLongClick.onItemLongClick(position);
-            }
-            return false;
-        });
+        if (onItemClick != null) {
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(), view, position));
+        }
+        if (onItemLongClick != null) {
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
+        }
         convert(holder, lisData.get(position), position);
     }
 
@@ -93,10 +88,10 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void updateItem(int positon, Data data) {
-        if (size(lisData)<=positon) {
+        if (size(lisData) <= positon) {
             return;
         }
-        lisData.set(positon,data);
+        lisData.set(positon, data);
         notifyDataSetChanged();
     }
 
