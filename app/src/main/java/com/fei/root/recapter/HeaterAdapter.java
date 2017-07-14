@@ -14,12 +14,11 @@ import java.util.List;
 /**
  * Created by PengFeifei on 17-7-13.
  * 支持多Header和Footer Adapter
+ * SparseArrays 不是顺序存储的 插入数据按key从小到大插入
  */
 
 public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHolder> implements HeaterAdapterAction<Data> {
 
-    //SparseArray 不是顺序存取的!!!!
-    //用linkedhashMap
     private SparseArray<View> headers;
     private SparseArray<View> footers;
 
@@ -92,8 +91,9 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             }
             return false;
         });
-        convert(holder, lisData.get(position- size(headers)), position- size(headers));
+        convert(holder, lisData.get(position - size(headers)), position - size(headers));
     }
+
     protected abstract void convert(CommonHolder holder, Data data, int position);
 
     @Override
@@ -101,53 +101,59 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         return size(lisData) + size(headers) + size(footers);
     }
 
-    public void addHeader(int uniqueId, View header) {
+    public Integer addHeader(View header) {
+        if (header.getParent() != null) {
+            Log.e(TAG, "already has a parent,can not add again");
+            return -1;
+        }
+        int uniqueId = UNIQUE_ID--;
         if (headers == null) {
             headers = new SparseArray<>();
         }
         int position = headers.indexOfKey(uniqueId);
         if (position >= 0) {
-            return;
+            return -1;
         }
         headers.put(uniqueId, header);
         notifyDataSetChanged();
+        return -uniqueId;
     }
 
-    public void addHeader(View header) {
-        addHeader(UNIQUE_ID--, header);
-    }
-
-    public void addFooter(int uniqueId, View footer) {
+    public Integer addFooter(View footer) {
+        if (footer.getParent() != null) {
+            Log.e(TAG, "already has a parent,can not add again");
+            return -1;
+        }
+        int uniqueId = UNIQUE_ID--;
         if (footers == null) {
             footers = new SparseArray<>();
         }
         int position = footers.indexOfKey(uniqueId);
         if (position >= 0) {
-            return;
+            return -1;
         }
         footers.put(uniqueId, footer);
         notifyDataSetChanged();
+        return -uniqueId;
     }
 
-    public void addFooter(View footer) {
-        addFooter(UNIQUE_ID--, footer);
-    }
 
     public View getHeader(int uniqueId) {
         if (headers == null || headers.size() == 0) {
             return null;
         }
-        return headers.get(uniqueId);
+        return headers.get(-uniqueId);
     }
 
     public View getFooter(int uniqueId) {
         if (footers == null || footers.size() == 0) {
             return null;
         }
-        return footers.get(uniqueId);
+        return footers.get(-uniqueId);
     }
 
     public void removeHeader(int uniqueId) {
+        uniqueId = -uniqueId;
         if (headers == null || headers.size() == 0) {
             return;
         }
@@ -173,6 +179,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     public void removeFooter(int uniqueId) {
+        uniqueId = -uniqueId;
         if (footers == null || footers.size() == 0) {
             return;
         }
@@ -236,7 +243,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         lisData.add(position, data);
-        notifyItemInserted(position+size(headers));
+        notifyItemInserted(position + size(headers));
     }
 
     @Override
@@ -245,15 +252,15 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         lisData.remove(position);
-        notifyItemRemoved(position+size(headers));
+        notifyItemRemoved(position + size(headers));
     }
 
     @Override
     public void updateItem(int positon, Data data) {
-        if (size(lisData)<=positon) {
+        if (size(lisData) <= positon) {
             return;
         }
-        lisData.set(positon,data);
+        lisData.set(positon, data);
         notifyDataSetChanged();
     }
 
@@ -286,11 +293,11 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void setOnHeaderClick(AdapterListeners.OnHeaderClick onHeaderClick) {
-        this.onHeaderClick=onHeaderClick;
+        this.onHeaderClick = onHeaderClick;
     }
 
     @Override
     public void setOnFooterClick(AdapterListeners.OnFooterClick onFooterClick) {
-        this.onFooterClick=onFooterClick;
+        this.onFooterClick = onFooterClick;
     }
 }

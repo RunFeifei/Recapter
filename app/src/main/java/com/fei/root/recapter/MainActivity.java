@@ -51,14 +51,12 @@ public class MainActivity extends AppCompatActivity {
     int i = 10;
 
     public void onClick(View view) {
-        t1 = new TextView(this);
         t1.setText("Header " + i++);
-        commonAdapter.addHeader(t1);
+        i=commonAdapter.addHeader(t1);
     }
 
     public void onClick1(View view) {
-//        commonAdapter.removeItem(0);
-        t1.setText("dcdcdcd " + i++);
+        ((TextView)commonAdapter.getHeader(i)).setText("-----------");
     }
 
 }
