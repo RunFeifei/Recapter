@@ -65,32 +65,23 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
         if (headers != null && position < headers.size()) {
-            holder.itemView.setOnClickListener(view -> {
-                if (onHeaderClick != null) {
-                    onHeaderClick.onHeaderClick(position);
-                }
-            });
+            if (onHeaderClick != null) {
+                holder.itemView.setOnClickListener(view -> onHeaderClick.onHeaderClick(getRecyclerView(), view, position));
+            }
             return;
         }
         if (footers != null && position >= lisData.size() + headers.size()) {
-            holder.itemView.setOnClickListener(view -> {
-                if (onFooterClick != null) {
-                    onFooterClick.onHeaderClick(position);
-                }
-            });
+            if (onFooterClick != null) {
+                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(getRecyclerView(), view, position));
+            }
             return;
         }
-        holder.itemView.setOnClickListener(view -> {
-            if (onItemClick != null) {
-                onItemClick.onItemClick(position);
-            }
-        });
-        holder.itemView.setOnLongClickListener(view -> {
-            if (onItemLongClick != null) {
-                return onItemLongClick.onItemLongClick(position);
-            }
-            return false;
-        });
+        if (onItemClick != null) {
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(),view,position));
+        }
+        if (onItemLongClick != null) {
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(),view,position));
+        }
         convert(holder, lisData.get(position - size(headers)), position - size(headers));
     }
 

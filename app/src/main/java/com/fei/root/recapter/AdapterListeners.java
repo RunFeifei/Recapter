@@ -1,5 +1,8 @@
 package com.fei.root.recapter;
 
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
 /**
  * Created by PengFeifei on 17-7-14.
  */
@@ -7,18 +10,18 @@ package com.fei.root.recapter;
 public interface AdapterListeners {
 
     interface OnItemClick {
-        void onItemClick(int Position);
+        void onItemClick(RecyclerView recyclerView, View header,int Position);
     }
 
     interface OnItemLongClick {
-        boolean onItemLongClick(int Position);
+        boolean onItemLongClick(RecyclerView recyclerView, View header,int Position);
     }
 
     interface OnHeaderClick {
-        boolean onHeaderClick(int Position);
+        void onHeaderClick(RecyclerView recyclerView, View header, int Position);
     }
 
     interface OnFooterClick {
-        boolean onHeaderClick(int Position);
+        void onHeaderClick(RecyclerView recyclerView, View footer,int Position);
     }
 }

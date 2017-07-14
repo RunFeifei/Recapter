@@ -45,14 +45,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(commonAdapter);
         t1 = new TextView(this);
         t1.setText("Header " + i++);
+        commonAdapter.addHeader(t1);
+        commonAdapter.setOnHeaderClick(new AdapterListeners.OnHeaderClick() {
+            @Override
+            public void onHeaderClick(RecyclerView recyclerView, View header, int Position) {
+                header.getParent();
+            }
+        });
     }
 
     TextView t1;
     int i = 10;
 
     public void onClick(View view) {
+        t1 = new TextView(this);
         t1.setText("Header " + i++);
         i=commonAdapter.addHeader(t1);
+
     }
 
     public void onClick1(View view) {
