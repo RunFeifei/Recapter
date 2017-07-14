@@ -1,8 +1,12 @@
-package com.fei.root.recapter;
+package com.fei.root.recapter.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import com.fei.root.recapter.action.AdapterAction;
+import com.fei.root.recapter.AdapterListeners;
+import com.fei.root.recapter.CommonHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;

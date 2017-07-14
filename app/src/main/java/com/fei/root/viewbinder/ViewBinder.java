@@ -1,7 +1,9 @@
-package com.fei.root.recapter;
+package com.fei.root.viewbinder;
 
 import android.util.Log;
 import android.view.View;
+
+import com.fei.root.RecapterApp;
 
 import java.lang.reflect.Field;
 

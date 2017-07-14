@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fei.root.RecapterApp;
+
 /**
  * Created by PengFeifei on 17-7-12.
  */
