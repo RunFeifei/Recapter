@@ -1,4 +1,4 @@
-package com.fei.root.recapter;
+package com.fei.root;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.fei.root.recapter.*;
+import com.fei.root.recapter.adapter.HeaterAdapter;
+import com.fei.root.viewbinder.Binder;
+import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
 

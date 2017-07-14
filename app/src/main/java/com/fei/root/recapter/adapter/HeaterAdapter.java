@@ -1,4 +1,4 @@
-package com.fei.root.recapter;
+package com.fei.root.recapter.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -7,6 +7,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.fei.root.recapter.AdapterListeners;
+import com.fei.root.recapter.CommonHolder;
+import com.fei.root.recapter.action.HeaterAdapterAction;
 
 import java.util.ArrayList;
 import java.util.List;

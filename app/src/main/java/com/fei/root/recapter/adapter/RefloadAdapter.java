@@ -1,4 +1,4 @@
-package com.fei.root.recapter;
+package com.fei.root.recapter.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package com.fei.root.recapter;
+package com.fei.root.viewbinder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
