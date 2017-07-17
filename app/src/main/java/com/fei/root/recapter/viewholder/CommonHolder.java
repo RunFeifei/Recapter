@@ -1,4 +1,4 @@
-package com.fei.root.recapter;
+package com.fei.root.recapter.viewholder;
 
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
@@ -41,13 +41,13 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public CommonHolder setImageResource(int viewId,@DrawableRes int resId) {
+    public CommonHolder setImageResource(int viewId, @DrawableRes int resId) {
         ImageView view = findView(viewId);
         view.setImageResource(resId);
         return this;
     }
 
-    public CommonHolder setTextColor(int viewId,@ColorInt int textColor) {
+    public CommonHolder setTextColor(int viewId, @ColorInt int textColor) {
         TextView view = findView(viewId);
         view.setTextColor(textColor);
         return this;

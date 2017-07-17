@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.fei.root.recapter.com.fei.root.MainActivity"
     >
 
     <TextView
@@ -26,14 +25,7 @@
         android:onClick="onClick1"
         />
 
-    <LinearLayout
-        android:id="@+id/lay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        ></LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
+    <com.fei.root.recapter.view.RefloadRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
