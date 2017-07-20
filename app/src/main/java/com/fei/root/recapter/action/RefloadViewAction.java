@@ -16,5 +16,7 @@ public interface RefloadViewAction {
 
     View onLoadSuccess();
 
+    View onLoadNone();
+
     void onClick(View view);
 }

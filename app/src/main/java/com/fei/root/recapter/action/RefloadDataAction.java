@@ -11,4 +11,6 @@ public interface RefloadDataAction<Data> {
     void onLoadFail();
 
     void onLoadSuccess();
+
+    void onLoadNone();
 }

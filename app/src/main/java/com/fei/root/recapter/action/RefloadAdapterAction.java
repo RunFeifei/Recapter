@@ -6,13 +6,15 @@ package com.fei.root.recapter.action;
 
 public interface RefloadAdapterAction {
 
-    void onLoadStart(float deltaY);
+    void onLoadStart(float deltaY,boolean pulldown);
 
-    void onLoading();
+    void onLoading(boolean pulldown);
 
-    void onLoadFail();
+    void onLoadFail(boolean pulldown);
 
-    void onLoadSuccess();
+    void onLoadSuccess(boolean pulldown);
+
+    void onLoadNone();
 
     // TODO: 17-7-20
     //void onLoadSuccess(List<Data>);

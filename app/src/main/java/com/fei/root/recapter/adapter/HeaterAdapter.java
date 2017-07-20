@@ -8,9 +8,9 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fei.root.recapter.action.HeaterAdapterAction;
 import com.fei.root.recapter.listener.AdapterListeners;
 import com.fei.root.recapter.viewholder.CommonHolder;
-import com.fei.root.recapter.action.HeaterAdapterAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,8 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     private List<Data> lisData;
     private int layoutId;
 
-    private static int UNIQUE_ID = Integer.MIN_VALUE / 2;
+    private static int UNIQUE_ID_HEADER = Integer.MIN_VALUE / 2;
+    private static int UNIQUE_ID_FOOTER = Integer.MIN_VALUE / 2;
     private final String TAG = HeaterAdapter.this.getClass().getSimpleName();
 
     public HeaterAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
@@ -46,13 +47,13 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public int getItemViewType(int position) {
-        if (headers != null && position < headers.size()) {
+        if (position < size(headers)) {
             return headers.keyAt(position);
         }
-        if (footers != null && position >= lisData.size() + headers.size()) {
-            return footers.keyAt(position);
+        if (footers != null && position >= size(lisData) + size(headers)) {
+            return footers.keyAt(position - size(lisData) - size(headers));
         }
-        return super.getItemViewType(position);
+        return Integer.MIN_VALUE / 2;
     }
 
     @Override
@@ -68,13 +69,13 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        if (headers != null && position < headers.size()) {
+        if (position < size(headers)) {
             if (onHeaderClick != null) {
                 holder.itemView.setOnClickListener(view -> onHeaderClick.onHeaderClick(getRecyclerView(), view, position));
             }
             return;
         }
-        if (footers != null && position >= lisData.size() + headers.size()) {
+        if (footers != null && position >= size(lisData) + size(headers)) {
             if (onFooterClick != null) {
                 holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(getRecyclerView(), view, position));
             }
@@ -98,7 +99,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public int addHeader(View header) {
-        return addHeader(UNIQUE_ID--, header);
+        return addHeader(UNIQUE_ID_HEADER--, header);
     }
 
     protected int addHeader(int uniqueId, View header) {
@@ -109,10 +110,6 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         if (headers == null) {
             headers = new SparseArray<>();
         }
-        int position = headers.indexOfKey(uniqueId);
-        if (position >= 0) {
-            //duplicate Id found
-        }
         headers.put(uniqueId, header);
         notifyDataSetChanged();
         return uniqueId;
@@ -120,7 +117,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public int addFooter(View footer) {
-        return addFooter(UNIQUE_ID++, footer);
+        return addFooter(UNIQUE_ID_FOOTER++, footer);
     }
 
     protected int addFooter(int uniqueId, View footer) {
@@ -130,10 +127,6 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         }
         if (footers == null) {
             footers = new SparseArray<>();
-        }
-        int position = footers.indexOfKey(uniqueId);
-        if (position >= 0) {
-            return 404;
         }
         footers.put(uniqueId, footer);
         notifyDataSetChanged();
@@ -163,6 +156,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         }
         int position = headers.indexOfKey(uniqueId);
         if (position < 0) {
+            Log.e(TAG, "not Header found");
             return;
         }
         headers.remove(uniqueId);
@@ -193,7 +187,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         footers.remove(uniqueId);
-        notifyItemRemoved(position);
+        notifyItemRemoved(position+getHeadersSize()+getDatasSize());
     }
 
     @Override
@@ -207,7 +201,19 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         footers.removeAt(position);
-        notifyItemRemoved(position);
+        notifyItemRemoved(position+getHeadersSize()+getDatasSize());
+    }
+
+    public int getFootersSize() {
+        return size(footers);
+    }
+
+    public int getHeadersSize() {
+        return size(headers);
+    }
+
+    public int getDatasSize() {
+        return size(lisData);
     }
 
     private int size(SparseArray sparseArray) {

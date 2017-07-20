@@ -2,7 +2,6 @@ package com.fei.root.recapter.view;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 
 import com.fei.root.recapter.action.RefloadViewAction;
 
@@ -42,4 +41,8 @@ public class DefaultRefreshHeaderView implements RefloadViewAction {
     public void onClick(View view) {
     }
 
+    @Override
+    public View onLoadNone() {
+        return null;
+    }
 }

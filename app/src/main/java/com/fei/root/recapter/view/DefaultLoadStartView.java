@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fei.root.recapter.R;
@@ -39,14 +40,14 @@ public class DefaultLoadStartView extends LinearLayout {
         layoutParams.gravity = Gravity.CENTER;
 
         textView = new TextView(context);
-        textView.setTextSize(10);
+        textView.setTextSize(15);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         textView.setPadding(50, 0, 0, 0);
 
 
         imageView = new ImageView(context);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(100, 100, 1.0f));
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(200, 200, 1.0f));
         imageView.setScaleType(ImageView.ScaleType.FIT_END);
         imageView.setPadding(0, 0, 50, 0);
 
