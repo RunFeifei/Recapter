@@ -5,26 +5,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fei.root.recapter.*;
-import com.fei.root.recapter.adapter.HeaterAdapter;
+import com.fei.root.recapter.R;
+import com.fei.root.recapter.action.RefloadDataAction;
+import com.fei.root.recapter.adapter.RefloadAdapter;
+import com.fei.root.recapter.listener.AdapterListeners;
+import com.fei.root.recapter.view.DefaultRefreshHeaderView;
+import com.fei.root.recapter.view.RefloadRecyclerView;
+import com.fei.root.recapter.viewholder.CommonHolder;
 import com.fei.root.viewbinder.Binder;
 import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RefloadDataAction<String> {
 
     @Binder
     private TextView btn;
     @Binder
-    private RecyclerView recyclerView;
-    @Binder
-    private LinearLayout lay;
+    private RefloadRecyclerView recyclerView;
 
-    private HeaterAdapter<String> commonAdapter;
+    private RefloadAdapter<String> commonAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,38 +43,59 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add("111");
         list.add("222");
+        list.add("333");
+        list.add("444");
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        commonAdapter = new HeaterAdapter<String>(list, R.layout.list_item) {
+        commonAdapter = new RefloadAdapter<String>(list, R.layout.list_item) {
             @Override
             protected void convert(CommonHolder holder, String s, int position) {
                 holder.setText(R.id.btn, s);
             }
         };
         recyclerView.setAdapter(commonAdapter);
-        t1 = new TextView(this);
-        t1.setText("Header " + i++);
-        commonAdapter.addHeader(t1);
         commonAdapter.setOnHeaderClick(new AdapterListeners.OnHeaderClick() {
             @Override
             public void onHeaderClick(RecyclerView recyclerView, View header, int Position) {
-                header.getParent();
             }
         });
+        commonAdapter.setRefreshHeader(new DefaultRefreshHeaderView(this));
+        commonAdapter.setRefloadDataListener(this);
     }
 
-    TextView t1;
-    int i = 10;
+    @Override
+    public void onLoading() {
+        Toast.makeText(this, "onLoading", Toast.LENGTH_SHORT).show();
+        Boolean result = new Random().nextBoolean();
+        recyclerView.postDelayed(() -> {
+            if (result) {
+                commonAdapter.appendItem("good");
+                commonAdapter.onLoadSuccess();
+            } else {
+                commonAdapter.onLoadFail();
+            }
+        }, 3000);
+
+    }
+
+    @Override
+    public void onLoadFail() {
+        Toast.makeText(this, "onLoadFail", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoadSuccess() {
+        Toast.makeText(this, "onLoadSuccess", Toast.LENGTH_SHORT).show();
+    }
 
     public void onClick(View view) {
-        t1 = new TextView(this);
-        t1.setText("Header " + i++);
-        i=commonAdapter.addHeader(t1);
+
 
     }
 
     public void onClick1(View view) {
-        ((TextView)commonAdapter.getHeader(i)).setText("-----------");
+
     }
+
 
 }

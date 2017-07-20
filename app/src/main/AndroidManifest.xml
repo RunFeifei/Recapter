@@ -11,6 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.fei.root.MainActivity">
+        </activity>
+        <activity android:name="com.fei.root.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

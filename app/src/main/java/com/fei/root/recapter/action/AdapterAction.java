@@ -2,7 +2,7 @@ package com.fei.root.recapter.action;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.fei.root.recapter.AdapterListeners;
+import com.fei.root.recapter.listener.AdapterListeners;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.fei.root.recapter.action.AdapterAction;
-import com.fei.root.recapter.AdapterListeners;
-import com.fei.root.recapter.CommonHolder;
+import com.fei.root.recapter.listener.AdapterListeners;
+import com.fei.root.recapter.viewholder.CommonHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHolder> implements AdapterAction<Data> {
 
-    protected List<Data> lisData;
+    private List<Data> lisData;
     private int layoutId;
 
     private RecyclerView recyclerView;

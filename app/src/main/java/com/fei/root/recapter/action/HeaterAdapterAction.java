@@ -2,7 +2,7 @@ package com.fei.root.recapter.action;
 
 import android.view.View;
 
-import com.fei.root.recapter.AdapterListeners;
+import com.fei.root.recapter.listener.AdapterListeners;
 
 /**
  * Created by PengFeifei on 17-7-14.
@@ -11,9 +11,9 @@ import com.fei.root.recapter.AdapterListeners;
 public interface HeaterAdapterAction<Data> extends AdapterAction<Data> {
 
 
-    Integer addHeader(View header);
+    int addHeader(View header);
 
-    Integer addFooter(View footer);
+    int addFooter(View footer);
 
     View getHeader(int uniqueId);
 

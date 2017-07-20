@@ -8,8 +8,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fei.root.recapter.AdapterListeners;
-import com.fei.root.recapter.CommonHolder;
+import com.fei.root.recapter.listener.AdapterListeners;
+import com.fei.root.recapter.viewholder.CommonHolder;
 import com.fei.root.recapter.action.HeaterAdapterAction;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     private List<Data> lisData;
     private int layoutId;
 
-    private static int UNIQUE_ID = -1;
+    private static int UNIQUE_ID = Integer.MIN_VALUE / 2;
     private final String TAG = HeaterAdapter.this.getClass().getSimpleName();
 
     public HeaterAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
@@ -81,10 +81,10 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(),view,position));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(), view, position));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(),view,position));
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
         }
         convert(holder, lisData.get(position - size(headers)), position - size(headers));
     }
@@ -96,59 +96,68 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         return size(lisData) + size(headers) + size(footers);
     }
 
-    public Integer addHeader(View header) {
+    @Override
+    public int addHeader(View header) {
+        return addHeader(UNIQUE_ID--, header);
+    }
+
+    protected int addHeader(int uniqueId, View header) {
         if (header.getParent() != null) {
             Log.e(TAG, "already has a parent,can not add again");
-            return -1;
+            return 404;
         }
-        int uniqueId = UNIQUE_ID--;
         if (headers == null) {
             headers = new SparseArray<>();
         }
         int position = headers.indexOfKey(uniqueId);
         if (position >= 0) {
-            return -1;
+            //duplicate Id found
         }
         headers.put(uniqueId, header);
         notifyDataSetChanged();
-        return -uniqueId;
+        return uniqueId;
     }
 
-    public Integer addFooter(View footer) {
+    @Override
+    public int addFooter(View footer) {
+        return addFooter(UNIQUE_ID++, footer);
+    }
+
+    protected int addFooter(int uniqueId, View footer) {
         if (footer.getParent() != null) {
             Log.e(TAG, "already has a parent,can not add again");
-            return -1;
+            return 404;
         }
-        int uniqueId = UNIQUE_ID--;
         if (footers == null) {
             footers = new SparseArray<>();
         }
         int position = footers.indexOfKey(uniqueId);
         if (position >= 0) {
-            return -1;
+            return 404;
         }
         footers.put(uniqueId, footer);
         notifyDataSetChanged();
-        return -uniqueId;
+        return uniqueId;
     }
 
 
+    @Override
     public View getHeader(int uniqueId) {
         if (headers == null || headers.size() == 0) {
             return null;
         }
-        return headers.get(-uniqueId);
+        return headers.get(uniqueId);
     }
 
+    @Override
     public View getFooter(int uniqueId) {
         if (footers == null || footers.size() == 0) {
             return null;
         }
-        return footers.get(-uniqueId);
+        return footers.get(uniqueId);
     }
 
     public void removeHeader(int uniqueId) {
-        uniqueId = -uniqueId;
         if (headers == null || headers.size() == 0) {
             return;
         }
@@ -160,6 +169,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         notifyItemRemoved(position);
     }
 
+    @Override
     public void removeHeader(View view) {
         if (headers == null || headers.size() == 0) {
             return;
@@ -174,7 +184,6 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     public void removeFooter(int uniqueId) {
-        uniqueId = -uniqueId;
         if (footers == null || footers.size() == 0) {
             return;
         }
@@ -187,6 +196,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         notifyItemRemoved(position);
     }
 
+    @Override
     public void removeFooter(View view) {
         if (footers == null || footers.size() == 0) {
             return;
