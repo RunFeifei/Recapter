@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import static com.fei.root.recapter.adapter.RefloadAdapter.REFRESH_FOOTER_ID;
+import static com.fei.root.recapter.adapter.RefloadAdapter.LOAD_FOOTER_ID;
 import static com.fei.root.recapter.adapter.RefloadAdapter.REFRESH_HEADER_ID;
 
 /**
@@ -51,7 +51,7 @@ public class RefloadRecyclerView extends RecyclerView {
          */
         @Override
         public ViewHolder getRecycledView(int viewType) {
-            if (viewType == REFRESH_HEADER_ID || viewType == REFRESH_FOOTER_ID) {
+            if (viewType == REFRESH_HEADER_ID || viewType == LOAD_FOOTER_ID) {
                 return null;
             }
             return super.getRecycledView(viewType);

@@ -12,6 +12,7 @@ import com.fei.root.recapter.R;
 import com.fei.root.recapter.action.RefloadDataAction;
 import com.fei.root.recapter.adapter.RefloadAdapter;
 import com.fei.root.recapter.listener.AdapterListeners;
+import com.fei.root.recapter.view.DefaultRefreshFooterView;
 import com.fei.root.recapter.view.DefaultRefreshHeaderView;
 import com.fei.root.recapter.view.RefloadRecyclerView;
 import com.fei.root.recapter.viewholder.CommonHolder;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
 
     private RefloadAdapter<String> commonAdapter;
 
+    private int i = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +44,17 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
 
     private void init() {
         ArrayList<String> list = new ArrayList<>();
-        list.add("111");
-        list.add("222");
-        list.add("333");
-        list.add("444");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         commonAdapter = new RefloadAdapter<String>(list, R.layout.list_item) {
@@ -60,19 +70,31 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
             }
         });
         commonAdapter.setRefreshHeader(new DefaultRefreshHeaderView(this));
-        commonAdapter.setRefloadDataListener(this);
+        commonAdapter.setRefreshFooter(new DefaultRefreshFooterView(this));
+        commonAdapter.setOnPullDownDataListener(this);
+        commonAdapter.setOnPullUpDataListener(this);
     }
 
     @Override
     public void onLoading() {
         Toast.makeText(this, "onLoading", Toast.LENGTH_SHORT).show();
-        Boolean result = new Random().nextBoolean();
-        recyclerView.postDelayed(() -> {
-            if (result) {
-                commonAdapter.appendItem("good");
-                commonAdapter.onLoadSuccess();
+        int result = new Random(100).nextInt();
+        /*recyclerView.postDelayed(() -> {
+            if (result % 2 == 0) {
+                commonAdapter.appendItem("refresh");
+                commonAdapter.onLoadSuccess(true);
             } else {
-                commonAdapter.onLoadFail();
+                commonAdapter.onLoadFail(true);
+            }
+        }, 3000);*/
+        recyclerView.postDelayed(() -> {
+            if (result % 4 == 0) {
+                commonAdapter.appendItem("load");
+                commonAdapter.onLoadSuccess(false);
+            } else if (result % 2 == 0) {
+                commonAdapter.onLoadNone();
+            } else {
+                commonAdapter.onLoadFail(false);
             }
         }, 3000);
 
@@ -88,9 +110,13 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
         Toast.makeText(this, "onLoadSuccess", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onLoadNone() {
+
+    }
+
     public void onClick(View view) {
-
-
+        Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
     }
 
     public void onClick1(View view) {
