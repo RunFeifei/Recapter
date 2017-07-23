@@ -6,6 +6,8 @@ import android.view.View;
 import com.fei.root.RecapterApp;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by PengFeifei on 17-7-12.
@@ -52,10 +54,25 @@ public class ViewBinder {
             } catch (IllegalAccessException e) {
                 throwException(e.getMessage());
             }
+            final Method method = getMatchMethod(viewHodlderClass, id);
+            if (method == null) {
+                continue;
+            }
+            method.setAccessible(true);
+            view.setOnClickListener((v) -> {
+                try {
+                    method.invoke(viewHolder,v);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            });
+
         }
     }
 
-    private static Integer getFieldId(Class<?> moduleRIdclass, String name, int id) {
+    private static int getFieldId(Class<?> moduleRIdclass, String name, int id) {
         if (id > 0) {
             return id;
         }
@@ -75,6 +92,28 @@ public class ViewBinder {
         return 0;
     }
 
+    private static Method getMatchMethod(Class<?> viewHodlderClass, int id) {
+        Method[] methods = viewHodlderClass.getDeclaredMethods();
+        for (Method method : methods) {
+            OnClick onClick = method.getAnnotation(OnClick.class);
+            if (onClick == null) {
+                continue;
+            }
+            if (id != onClick.id()) {
+                continue;
+            }
+            Class<?>[] methodClasses = method.getParameterTypes();
+            if (methodClasses == null || methodClasses.length != 1) {
+                return null;
+            }
+            if (!View.class.isAssignableFrom(methodClasses[0])) {
+                return null;
+            }
+            return method;
+        }
+        return null;
+    }
+
     private static void throwException(String str) throws RuntimeException {
         throw new RuntimeException(str);
     }
@@ -85,3 +124,4 @@ public class ViewBinder {
 
 
 }
+
