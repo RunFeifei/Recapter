@@ -12,9 +12,10 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import com.fei.root.recapter.LoadingType;
+import com.fei.root.recapter.action.LoadMoreAction;
 import com.fei.root.recapter.action.RefloadAdapterAction;
-import com.fei.root.recapter.action.RefloadDataAction;
 import com.fei.root.recapter.action.RefloadViewAction;
+import com.fei.root.recapter.action.RefreshDataAction;
 import com.fei.root.recapter.listener.AbsAnimatorListener;
 
 import java.util.List;
@@ -30,16 +31,18 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     public static final int LOAD_FOOTER_ID = 0;
     private static final String TAG = RefloadAdapter.class.getSimpleName();
 
+    private boolean isEnablePullRefreshing;
+    private boolean isEnablePullLoadMore;
+
     private RefloadViewAction refreshHeader;
     private RefloadViewAction refreshFooter;
     private float touchDownY;
     private boolean isRefreshing;
     private boolean isLoading;
-    private boolean isReadyToLoad;
     private boolean isBeyondScreen;
 
-    private RefloadDataAction<Data> pullDownDataAction;
-    private RefloadDataAction<Data> pullUpDataAction;
+    private RefreshDataAction<Data> refreshDataAction;
+    private LoadMoreAction<Data> pullUpDataAction;
 
     private static final int LOADING_TIME_OUT = 30 * 1000;
     private Runnable timeOutPullDown = () -> onLoadFail(true);
@@ -97,16 +100,16 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         this.refreshHeader = refreshHeader;
     }
 
-    public void setRefreshFooter(RefloadViewAction refreshFooter) {
+    public void setLoadMoreFooter(RefloadViewAction refreshFooter) {
         this.refreshFooter = refreshFooter;
     }
 
-    public void setOnPullDownDataListener(RefloadDataAction refloadDataAction) {
-        this.pullDownDataAction = refloadDataAction;
+    public void setRefreshDataListener(RefreshDataAction<Data> refreshDataAction) {
+        this.refreshDataAction = refreshDataAction;
     }
 
-    public void setOnPullUpDataListener(RefloadDataAction refloadDataAction) {
-        this.pullUpDataAction = refloadDataAction;
+    public void setLoadMoreDataListener(LoadMoreAction loadMoreAction) {
+        this.pullUpDataAction = loadMoreAction;
     }
 
     @Override
@@ -116,19 +119,21 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
                 touchDownY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (!isRefreshing
-                        && !getRecyclerView().canScrollVertically(-1) &&
-                        event.getY() - touchDownY > getTouchSlop()) {
+                if (isEnablePullRefreshing && !isRefreshing
+                        && !getRecyclerView().canScrollVertically(-1)
+                        && event.getY() - touchDownY > getTouchSlop()) {
                     onLoadStart(event.getY() - touchDownY, true);
                     return true;
                 }
-                if (!isLoading && !getRecyclerView().canScrollVertically(1) && touchDownY - event.getY() > 0 && isBeyondScreen) {
+                if (isEnablePullLoadMore && !isLoading
+                        && !getRecyclerView().canScrollVertically(1)
+                        && touchDownY - event.getY() > 0 && isBeyondScreen) {
                     onLoadStart(event.getY() - touchDownY, false);
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (!isRefreshing) {
+                if (isEnablePullRefreshing && !isRefreshing) {
                     doRefreshing();
                 }
                 break;
@@ -158,7 +163,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             }
             return;
         }
-        isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
+        boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
         if (isReadyToLoad) {
             onLoading(false);
             return;
@@ -179,8 +184,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             getRecyclerView().removeCallbacks(timeOutPullDown);
             getRecyclerView().postDelayed(timeOutPullDown, LOADING_TIME_OUT);
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_ING, refreshHeader));
-            if (pullDownDataAction != null) {
-                pullDownDataAction.onLoading();
+            if (refreshDataAction != null) {
+                refreshDataAction.onRefreshing();
             }
             return;
         }
@@ -201,8 +206,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         if (pulldown) {
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_FAIL, refreshHeader));
             removeHeaderImmediately(false);
-            if (pullDownDataAction != null) {
-                pullDownDataAction.onLoadFail();
+            if (refreshDataAction != null) {
+                refreshDataAction.onRefreshFail();
             }
             return;
         }
@@ -222,8 +227,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             getRecyclerView().removeCallbacks(timeOutPullDown);
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshHeader));
             removeHeaderImmediately(false);
-            if (pullDownDataAction != null) {
-                pullDownDataAction.onLoadSuccess();
+            if (refreshDataAction != null) {
+                refreshDataAction.onRefreshSuccess();
             }
             return;
         }
@@ -297,16 +302,23 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             removeFooter(LOAD_FOOTER_ID);
             return;
         }
-        getRecyclerView().postDelayed(() -> removeFooter(LOAD_FOOTER_ID),1500);
+        getRecyclerView().postDelayed(() -> removeFooter(LOAD_FOOTER_ID), 1500);
     }
 
     private int getTouchSlop() {
         return ViewConfiguration.get(getRecyclerView().getContext()).getScaledTouchSlop();
     }
 
-    private void scorllToBottom() {
+    public void scorllToBottom() {
         RecyclerView recyclerView = getRecyclerView();
         recyclerView.smoothScrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
     }
 
+    public void setEnablePullRefreshing(boolean enablePullRefreshing) {
+        isEnablePullRefreshing = enablePullRefreshing;
+    }
+
+    public void setEnablePullLoadMore(boolean enablePullLoadMore) {
+        isEnablePullLoadMore = enablePullLoadMore;
+    }
 }

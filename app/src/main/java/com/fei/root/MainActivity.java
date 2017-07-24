@@ -9,7 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fei.root.recapter.R;
-import com.fei.root.recapter.action.RefloadDataAction;
+import com.fei.root.recapter.action.LoadMoreAction;
+import com.fei.root.recapter.action.RefreshDataAction;
 import com.fei.root.recapter.adapter.RefloadAdapter;
 import com.fei.root.recapter.listener.AdapterListeners;
 import com.fei.root.recapter.view.DefaultRefreshFooterView;
@@ -22,7 +23,7 @@ import com.fei.root.viewbinder.ViewBinder;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements RefloadDataAction<String> {
+public class MainActivity extends AppCompatActivity implements LoadMoreAction<String>,RefreshDataAction<String> {
 
     @Binder
     private TextView btn;
@@ -70,34 +71,27 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
             }
         });
         commonAdapter.setRefreshHeader(new DefaultRefreshHeaderView(this));
-        commonAdapter.setRefreshFooter(new DefaultRefreshFooterView(this));
-        commonAdapter.setOnPullDownDataListener(this);
-        commonAdapter.setOnPullUpDataListener(this);
+        commonAdapter.setLoadMoreFooter(new DefaultRefreshFooterView(this));
+        commonAdapter.setRefreshDataListener(this);
+        commonAdapter.setLoadMoreDataListener(this);
+        commonAdapter.setEnablePullLoadMore(true);
+        commonAdapter.setEnablePullRefreshing(true);
     }
 
     @Override
     public void onLoading() {
         Toast.makeText(this, "onLoading", Toast.LENGTH_SHORT).show();
         int result = new Random(100).nextInt();
-        /*recyclerView.postDelayed(() -> {
-            if (result % 2 == 0) {
-                commonAdapter.appendItem("refresh");
-                commonAdapter.onLoadSuccess(true);
-            } else {
-                commonAdapter.onLoadFail(true);
-            }
-        }, 3000);*/
         recyclerView.postDelayed(() -> {
-            if (result % 4 == 0) {
+            if (result % 2 == 0) {
                 commonAdapter.appendItem("load");
                 commonAdapter.onLoadSuccess(false);
-            } else if (result % 2 == 0) {
+            } else if (result % 3 == 0) {
                 commonAdapter.onLoadNone();
             } else {
                 commonAdapter.onLoadFail(false);
             }
         }, 3000);
-
     }
 
     @Override
@@ -123,5 +117,26 @@ public class MainActivity extends AppCompatActivity implements RefloadDataAction
 
     }
 
+    @Override
+    public void onRefreshing() {
+        int result = new Random(100).nextInt();
+        recyclerView.postDelayed(() -> {
+            if (result % 2 == 0) {
+                commonAdapter.appendItem("refresh");
+                commonAdapter.onLoadSuccess(true);
+            } else {
+                commonAdapter.onLoadFail(true);
+            }
+        }, 3000);
+    }
 
+    @Override
+    public void onRefreshFail() {
+
+    }
+
+    @Override
+    public void onRefreshSuccess() {
+
+    }
 }
