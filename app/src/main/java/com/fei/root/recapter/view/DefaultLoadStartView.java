@@ -36,7 +36,7 @@ public class DefaultLoadStartView extends LinearLayout {
         setOrientation(HORIZONTAL);
         setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f);
         layoutParams.gravity = Gravity.CENTER;
 
         textView = new TextView(context);
@@ -47,7 +47,7 @@ public class DefaultLoadStartView extends LinearLayout {
 
 
         imageView = new ImageView(context);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(200, 200, 1.0f));
+        imageView.setLayoutParams(layoutParams);
         imageView.setScaleType(ImageView.ScaleType.FIT_END);
         imageView.setPadding(0, 0, 50, 0);
 

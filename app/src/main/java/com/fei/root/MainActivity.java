@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LoadMoreAction<St
             } else {
                 commonAdapter.onLoadFail(false);
             }
-        }, 3000);
+        }, 6000);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoadMoreAction<St
             } else {
                 commonAdapter.onLoadFail(true);
             }
-        }, 3000);
+        }, 6000);
     }
 
     @Override
