@@ -7,13 +7,13 @@
     tools:context="com.fei.root.SwipeActivity"
     >
 
-    <com.fei.root.recapter.view.SwipeRecyclerView
+    <com.fei.root.recater.view.SwipeRecyclerView
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         >
 
-    </com.fei.root.recapter.view.SwipeRecyclerView>
+    </com.fei.root.recater.view.SwipeRecyclerView>
 
 </LinearLayout>

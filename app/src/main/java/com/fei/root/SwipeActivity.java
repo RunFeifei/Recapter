@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.fei.root.recapter.R;
-import com.fei.root.recapter.action.LoadMoreAction;
-import com.fei.root.recapter.adapter.RefloadAdapter;
-import com.fei.root.recapter.view.DefaultRefreshFooterView;
-import com.fei.root.recapter.view.SwipeRecyclerView;
-import com.fei.root.recapter.viewholder.CommonHolder;
+import com.fei.root.recater.action.LoadMoreAction;
+import com.fei.root.recater.adapter.RefloadAdapter;
+import com.fei.root.recater.view.DefaultRefreshFooterView;
+import com.fei.root.recater.view.SwipeRecyclerView;
+import com.fei.root.recater.viewholder.CommonHolder;
 import com.fei.root.viewbinder.Binder;
 import com.fei.root.viewbinder.ViewBinder;
 

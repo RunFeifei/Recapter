@@ -25,7 +25,7 @@
         android:onClick="onClick1"
         />
 
-    <com.fei.root.recapter.view.RefloadRecyclerView
+    <com.fei.root.recater.view.RefloadRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
