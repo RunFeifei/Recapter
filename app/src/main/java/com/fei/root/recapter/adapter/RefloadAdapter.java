@@ -154,13 +154,15 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
                 layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 view.setLayoutParams(layoutParams);
             }
-            int height = Math.min((int) deltaY / 3, 300);
+            int height=(int) deltaY;
+//            int height = Math.min((int) deltaY / 3, 300);
             height = height <= getTouchSlop() / 2 ? 0 : height;
+            if (height == 0) {
+                removeHeaderImmediately(true);
+                return;
+            }
             layoutParams.height = height;
             view.setLayoutParams(layoutParams);
-            if (layoutParams.height == 0) {
-                removeHeaderImmediately(true);
-            }
             return;
         }
         boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;

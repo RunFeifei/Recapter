@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fei.root.recapter.action.RefloadViewAction;
@@ -23,11 +22,11 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
 
     @Override
     public View onLoadStart() {
-        TextView textView=new TextView(context);
+        TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(15);
         textView.setText("上拉加载更多");
-        textView.setPadding(0,30,0,30);
+        textView.setPadding(0, 30, 0, 30);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
@@ -36,17 +35,16 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
 
     @Override
     public View onLoading() {
-//        return new DefaultLoadIngView(context);
-        return new ProgressBar(context);
+        return new DefaultLoadIngView(context);
     }
 
     @Override
     public View onLoadFail() {
-        TextView textView=new TextView(context);
+        TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(15);
         textView.setText("加载失败");
-        textView.setPadding(0,30,0,30);
+        textView.setPadding(0, 30, 0, 30);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
@@ -55,11 +53,11 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
 
     @Override
     public View onLoadSuccess() {
-        TextView textView=new TextView(context);
+        TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(15);
         textView.setText("加载成功");
-        textView.setPadding(0,30,0,30);
+        textView.setPadding(0, 30, 0, 30);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
@@ -68,11 +66,11 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
 
     @Override
     public View onLoadNone() {
-        TextView textView=new TextView(context);
+        TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(15);
         textView.setText("没有更多了");
-        textView.setPadding(0,30,0,30);
+        textView.setPadding(0, 30, 0, 30);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);

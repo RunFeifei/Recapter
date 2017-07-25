@@ -4,7 +4,11 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.fei.root.recapter.R;
 
@@ -14,27 +18,40 @@ import com.fei.root.recapter.R;
  * 所以将MaterialProgressDrawable copy到工程下
  */
 
-public class DefaultLoadIngView extends DefaultLoadStartView {
+public class DefaultLoadIngView extends LinearLayout {
 
 
     public DefaultLoadIngView(Context context) {
         super(context);
+        init(context,null);
     }
 
     public DefaultLoadIngView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context,null);
     }
 
-    @Override
     protected void init(Context context, @Nullable AttributeSet attrs) {
-        super.init(context, attrs);
+        setGravity(Gravity.CENTER);
+        setOrientation(HORIZONTAL);
+        setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+
+        TextView textView = new TextView(context);
+        textView.setTextSize(15);
+        textView.setLayoutParams(layoutParams);
+        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        textView.setPadding(20, 0, 0, 0);
+
+        ProgressBar progressBar = new ProgressBar(context);
+        layoutParams.gravity = Gravity.RIGHT;
+        progressBar.setLayoutParams(layoutParams);
+        progressBar.setPadding(0, 0, 20, 0);
+
         textView.setText("正在刷新");
-        MaterialProgressDrawable materialProgressDrawable = new MaterialProgressDrawable(context, imageView);
-        materialProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent));
-        materialProgressDrawable.setAlpha(255);
-        materialProgressDrawable.setStartEndTrim(0f, 0.8f);
-        materialProgressDrawable.setProgressRotation(1);
-        imageView.setImageDrawable(materialProgressDrawable);
-        materialProgressDrawable.start();
+        addView(progressBar);
+        addView(textView);
     }
 }
