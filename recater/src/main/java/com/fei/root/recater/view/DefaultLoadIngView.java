@@ -16,15 +16,16 @@ import android.widget.TextView;
 
 public class DefaultLoadIngView extends LinearLayout {
 
+    private TextView textView;
 
     public DefaultLoadIngView(Context context) {
         super(context);
-        init(context,null);
+        init(context, null);
     }
 
     public DefaultLoadIngView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context,null);
+        init(context, null);
     }
 
     protected void init(Context context, @Nullable AttributeSet attrs) {
@@ -35,7 +36,7 @@ public class DefaultLoadIngView extends LinearLayout {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.CENTER;
 
-        TextView textView = new TextView(context);
+        textView = new TextView(context);
         textView.setTextSize(15);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
@@ -49,5 +50,10 @@ public class DefaultLoadIngView extends LinearLayout {
         textView.setText("正在刷新");
         addView(progressBar);
         addView(textView);
+    }
+
+    public DefaultLoadIngView setText(CharSequence charSequence) {
+        textView.setText(charSequence);
+        return this;
     }
 }

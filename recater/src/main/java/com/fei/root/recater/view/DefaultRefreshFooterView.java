@@ -36,7 +36,7 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
 
     @Override
     public View onLoading() {
-        return new DefaultLoadIngView(context);
+        return new DefaultLoadIngView(context).setText("正在加载更多");
     }
 
     @Override

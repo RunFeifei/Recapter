@@ -24,6 +24,7 @@ import java.util.List;
 /**
  * Created by PengFeifei on 17-7-14.
  * 下拉刷新,上拉加载更多
+ * 需要搭配RefloadRecyclerView使用
  */
 
 public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implements View.OnTouchListener, RefloadAdapterAction {
@@ -51,6 +52,10 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     public RefloadAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
         super(lisData, layoutId);
+    }
+
+    public RefloadAdapter(@LayoutRes int layoutId) {
+        super(layoutId);
     }
 
     @Override
@@ -208,6 +213,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         getRecyclerView().removeCallbacks(pulldown ? timeOutPullDown : timeOutPullUp);
         if (pulldown) {
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_FAIL, refreshHeader));
+            scorllToTop();
             removeHeaderImmediately(false);
             if (refreshDataAction != null) {
                 refreshDataAction.onRefreshFail();
@@ -229,6 +235,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             isRefreshing = false;
             getRecyclerView().removeCallbacks(timeOutPullDown);
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshHeader));
+            scorllToTop();
             removeHeaderImmediately(false);
             if (refreshDataAction != null) {
                 refreshDataAction.onRefreshSuccess();
@@ -315,6 +322,10 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     public void scorllToBottom() {
         RecyclerView recyclerView = getRecyclerView();
         recyclerView.smoothScrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
+    }
+
+    public void scorllToTop() {
+        getRecyclerView().smoothScrollToPosition(0);
     }
 
     public void setEnablePullRefreshing(boolean enablePullRefreshing) {

@@ -8,7 +8,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.fei.root.recater.action.HeaterAdapterAction;
 import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.viewholder.CommonHolder;
@@ -43,6 +42,10 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     public HeaterAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
         this.lisData = lisData;
+        this.layoutId = layoutId;
+    }
+
+    public HeaterAdapter( @LayoutRes int layoutId) {
         this.layoutId = layoutId;
     }
 
@@ -87,6 +90,13 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         }
         if (onItemLongClick != null) {
             holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
+        }
+        if (size(lisData) <= position - size(headers)) {
+            return;
+        }
+        Data data = lisData.get(position - size(headers));
+        if (data == null) {
+            return;
         }
         convert(holder, lisData.get(position - size(headers)), position - size(headers));
     }
@@ -188,7 +198,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         footers.remove(uniqueId);
-        notifyItemRemoved(position+getHeadersSize()+getDatasSize());
+        notifyItemRemoved(position + getHeadersSize() + getDatasSize());
     }
 
     @Override
@@ -202,7 +212,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             return;
         }
         footers.removeAt(position);
-        notifyItemRemoved(position+getHeadersSize()+getDatasSize());
+        notifyItemRemoved(position + getHeadersSize() + getDatasSize());
     }
 
     public int getFootersSize() {
