@@ -1,25 +1,19 @@
 package com.fei.root;
 
-import android.app.Application;
-import android.content.Context;
 import android.view.LayoutInflater;
+
+import com.feifei.common.MultiApplication;
 
 /**
  * Created by PengFeifei on 17-7-12.
  */
 
-public class RecapterApp extends Application {
-
-    private static Context context;
+public class RecapterApp extends MultiApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
-    }
-
-    public static Context getContext() {
-        return context;
+        init(this);
     }
 
     public static LayoutInflater getlayoutInflate() {
