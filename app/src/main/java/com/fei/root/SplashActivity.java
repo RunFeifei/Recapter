@@ -23,4 +23,8 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(new Intent(this, SwipeActivity.class));
     }
 
+    public void onClick2(View view) {
+        startActivity(new Intent(this, MultipleActivity.class));
+    }
+
 }
