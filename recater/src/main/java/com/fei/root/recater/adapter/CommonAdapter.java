@@ -19,7 +19,7 @@ import java.util.List;
 
 public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHolder> implements AdapterAction<Data> {
 
-    private List<Data> lisData;
+    private List<Data> listData;
     private int layoutId;
 
     private RecyclerView recyclerView;
@@ -27,8 +27,8 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     private AdapterListeners.OnItemClick onItemClick;
     private AdapterListeners.OnItemLongClick onItemLongClick;
 
-    public CommonAdapter(List<Data> lisData, @LayoutRes int layoutId) {
-        this.lisData = lisData;
+    public CommonAdapter(List<Data> listData, @LayoutRes int layoutId) {
+        this.listData = listData;
         this.layoutId = layoutId;
     }
 
@@ -45,12 +45,12 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
         if (onItemLongClick != null) {
             holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
         }
-        convert(holder, lisData.get(position), position);
+        convert(holder, listData.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        return lisData == null ? 0 : lisData.size();
+        return listData == null ? 0 : listData.size();
     }
 
     protected abstract void convert(CommonHolder holder, Data data, int position);
@@ -58,11 +58,11 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void clearAll(boolean isNotify) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
             return;
         }
-        lisData.clear();
+        listData.clear();
         if (isNotify) {
             notifyDataSetChanged();
         }
@@ -70,46 +70,46 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void appendItem(Data data) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
         }
-        lisData.add(data);
+        listData.add(data);
         notifyDataSetChanged();
     }
 
     @Override
     public void appendItems(List<Data> datas) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
         }
-        lisData.addAll(datas);
+        listData.addAll(datas);
         notifyDataSetChanged();
     }
 
     @Override
     public void insertItem(int position, Data data) {
-        if (size(lisData) <= position) {
+        if (size(listData) <= position) {
             return;
         }
-        lisData.add(position, data);
+        listData.add(position, data);
         notifyItemInserted(position);
     }
 
     @Override
     public void removeItem(int position) {
-        if (size(lisData) <= position) {
+        if (size(listData) <= position) {
             return;
         }
-        lisData.remove(position);
+        listData.remove(position);
         notifyItemRemoved(position);
     }
 
     @Override
     public void updateItem(int positon, Data data) {
-        if (size(lisData) <= positon) {
+        if (size(listData) <= positon) {
             return;
         }
-        lisData.set(positon, data);
+        listData.set(positon, data);
         notifyDataSetChanged();
     }
 
@@ -136,7 +136,7 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public List<Data> getDataList() {
-        return lisData;
+        return listData;
     }
 
     private int size(Collection collection) {

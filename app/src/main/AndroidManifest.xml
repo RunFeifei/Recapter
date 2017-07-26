@@ -21,6 +21,8 @@
         </activity>
         <activity android:name="com.fei.root.SwipeActivity">
         </activity>
+        <activity android:name="com.fei.root.MultipleActivity">
+        </activity>
     </application>
 
 </manifest>

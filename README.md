@@ -5,6 +5,7 @@ DONE 多header多footer的完全测试
 DONE 下拉刷新  
 DONE 上拉加载更多  
 DONE SwipeRefresh方式的下拉刷新  
+DONE MultiTypeAdapter  
 TODO 下拉刷新的完全测试  
 TODO 上拉加载更多的完全测试  
 TODO SwipeRefresh方式优化封装  
