@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 
-import com.fei.root.recater.action.LoadMoreAction;
+import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.adapter.RefloadAdapter;
 import com.fei.root.recater.viewholder.CommonHolder;
 
@@ -27,7 +27,7 @@ public class SwipeRecyclerView<Data> extends SwipeRefreshLayout {
 
     private Convert convert;
 
-    private LoadMoreAction<Data> loadMoreAction;
+    private OnLoadMoreData<Data> onLoadMoreData;
 
     public SwipeRecyclerView(Context context) {
         super(context);
@@ -83,9 +83,9 @@ public class SwipeRecyclerView<Data> extends SwipeRefreshLayout {
         refloadAdapter.setEnablePullLoadMore(enablePullLoadMore);
     }
 
-    public void setOnPullUpDataListener(LoadMoreAction loadMoreAction) {
-        this.loadMoreAction = loadMoreAction;
-        refloadAdapter.setLoadMoreDataListener(loadMoreAction);
+    public void setOnPullUpDataListener(OnLoadMoreData onLoadMoreData) {
+        this.onLoadMoreData = onLoadMoreData;
+        refloadAdapter.setLoadMoreDataListener(onLoadMoreData);
     }
 
     public interface Convert<Data> {

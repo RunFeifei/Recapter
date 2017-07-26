@@ -55,6 +55,19 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     protected abstract void convert(CommonHolder holder, Data data, int position);
 
+
+    @Override
+    public void clearAll(boolean isNotify) {
+        if (lisData == null) {
+            lisData = new ArrayList<Data>();
+            return;
+        }
+        lisData.clear();
+        if (isNotify) {
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void appendItem(Data data) {
         if (lisData == null) {
@@ -119,6 +132,11 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public RecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    public List<Data> getDataList() {
+        return lisData;
     }
 
     private int size(Collection collection) {

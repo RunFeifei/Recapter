@@ -28,7 +28,7 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
         textView.setTextSize(15);
         textView.setText("上拉加载更多");
         textView.setPadding(0, 30, 0, 30);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
         return textView;
@@ -46,7 +46,7 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
         textView.setTextSize(15);
         textView.setText("加载失败");
         textView.setPadding(0, 30, 0, 30);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
         return textView;
@@ -59,7 +59,7 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
         textView.setTextSize(15);
         textView.setText("加载成功");
         textView.setPadding(0, 30, 0, 30);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
         return textView;
@@ -72,7 +72,7 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
         textView.setTextSize(15);
         textView.setText("没有更多了");
         textView.setPadding(0, 30, 0, 30);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         layoutParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(layoutParams);
         return textView;

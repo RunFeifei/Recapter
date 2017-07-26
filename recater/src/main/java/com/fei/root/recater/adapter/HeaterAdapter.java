@@ -45,7 +45,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         this.layoutId = layoutId;
     }
 
-    public HeaterAdapter( @LayoutRes int layoutId) {
+    public HeaterAdapter(@LayoutRes int layoutId) {
         this.layoutId = layoutId;
     }
 
@@ -242,6 +242,18 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     @Override
+    public void clearAll(boolean isNotify) {
+        if (lisData == null) {
+            lisData = new ArrayList<Data>();
+            return;
+        }
+        lisData.clear();
+        if (isNotify) {
+            notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void appendItem(Data data) {
         if (lisData == null) {
             lisData = new ArrayList<Data>();
@@ -305,6 +317,11 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public RecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    public List<Data> getDataList() {
+        return lisData;
     }
 
     @Override

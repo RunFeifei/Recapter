@@ -31,7 +31,7 @@ public class DefaultLoadIngView extends LinearLayout {
     protected void init(Context context, @Nullable AttributeSet attrs) {
         setGravity(Gravity.CENTER);
         setOrientation(HORIZONTAL);
-        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 200));
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.CENTER;

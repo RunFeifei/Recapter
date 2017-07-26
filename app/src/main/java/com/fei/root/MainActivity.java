@@ -9,8 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fei.root.recapter.R;
-import com.fei.root.recater.action.LoadMoreAction;
-import com.fei.root.recater.action.RefreshDataAction;
+import com.fei.root.recater.action.OnLoadMoreData;
+import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.adapter.RefloadAdapter;
 import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.view.DefaultRefreshFooterView;
@@ -23,7 +23,7 @@ import com.fei.root.viewbinder.ViewBinder;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements LoadMoreAction<String>,RefreshDataAction<String> {
+public class MainActivity extends AppCompatActivity implements OnLoadMoreData<String>,OnRefreshData<String> {
 
     @Binder
     private TextView btn;
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements LoadMoreAction<St
     }
 
     @Override
-    public void onLoading() {
-        Toast.makeText(this, "onLoading", Toast.LENGTH_SHORT).show();
+    public void onLoadMoreIng() {
+        Toast.makeText(this, "onLoadMoreIng", Toast.LENGTH_SHORT).show();
         int result = new Random(100).nextInt();
         recyclerView.postDelayed(() -> {
             if (result % 2 == 0) {
@@ -95,17 +95,17 @@ public class MainActivity extends AppCompatActivity implements LoadMoreAction<St
     }
 
     @Override
-    public void onLoadFail() {
-        Toast.makeText(this, "onLoadFail", Toast.LENGTH_SHORT).show();
+    public void onLoadMoreFail() {
+        Toast.makeText(this, "onLoadMoreFail", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onLoadSuccess() {
-        Toast.makeText(this, "onLoadSuccess", Toast.LENGTH_SHORT).show();
+    public void onLoadMoreSuccess() {
+        Toast.makeText(this, "onLoadMoreSuccess", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onLoadNone() {
+    public void onLoadMoreNone() {
 
     }
 

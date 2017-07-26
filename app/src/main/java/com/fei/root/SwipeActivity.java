@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.fei.root.recapter.R;
-import com.fei.root.recater.action.LoadMoreAction;
+import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.adapter.RefloadAdapter;
 import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.SwipeRecyclerView;
@@ -16,7 +16,7 @@ import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
 
-public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,LoadMoreAction {
+public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,OnLoadMoreData {
 
     @Binder
     private SwipeRecyclerView<String> swipe;
@@ -76,7 +76,7 @@ public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     @Override
-    public void onLoading() {
+    public void onLoadMoreIng() {
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -88,17 +88,17 @@ public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     @Override
-    public void onLoadFail() {
+    public void onLoadMoreFail() {
 
     }
 
     @Override
-    public void onLoadSuccess() {
+    public void onLoadMoreSuccess() {
 
     }
 
     @Override
-    public void onLoadNone() {
+    public void onLoadMoreNone() {
 
     }
 }

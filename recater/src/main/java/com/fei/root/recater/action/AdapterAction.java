@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface AdapterAction<Data> {
 
+    void clearAll(boolean isNotify);
+
     void appendItem(Data data);
 
     void appendItems(List<Data> datas);
@@ -30,5 +32,7 @@ public interface AdapterAction<Data> {
 
 
     RecyclerView getRecyclerView();
+
+    List<Data> getDataList();
 
 }

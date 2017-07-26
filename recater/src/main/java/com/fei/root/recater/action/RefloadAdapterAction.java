@@ -17,5 +17,5 @@ public interface RefloadAdapterAction {
     void onLoadNone();
 
     // TODO: 17-7-20
-    //void onLoadSuccess(List<Data>);
+    //void onLoadMoreSuccess(List<Data>);
 }

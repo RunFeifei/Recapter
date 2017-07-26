@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 
 
 import com.fei.root.recater.LoadingType;
-import com.fei.root.recater.action.LoadMoreAction;
+import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.action.RefloadAdapterAction;
 import com.fei.root.recater.action.RefloadViewAction;
-import com.fei.root.recater.action.RefreshDataAction;
+import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.listener.AbsAnimatorListener;
 
 import java.util.List;
@@ -43,8 +43,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     private boolean isLoading;
     private boolean isBeyondScreen;
 
-    private RefreshDataAction<Data> refreshDataAction;
-    private LoadMoreAction<Data> pullUpDataAction;
+    private OnRefreshData<Data> onRefreshData;
+    private OnLoadMoreData<Data> pullUpDataAction;
 
     private static final int LOADING_TIME_OUT = 30 * 1000;
     private Runnable timeOutPullDown = () -> onLoadFail(true);
@@ -110,12 +110,12 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         this.refreshFooter = refreshFooter;
     }
 
-    public void setRefreshDataListener(RefreshDataAction<Data> refreshDataAction) {
-        this.refreshDataAction = refreshDataAction;
+    public void setRefreshDataListener(OnRefreshData<Data> onRefreshData) {
+        this.onRefreshData = onRefreshData;
     }
 
-    public void setLoadMoreDataListener(LoadMoreAction loadMoreAction) {
-        this.pullUpDataAction = loadMoreAction;
+    public void setLoadMoreDataListener(OnLoadMoreData onLoadMoreData) {
+        this.pullUpDataAction = onLoadMoreData;
     }
 
     @Override
@@ -186,14 +186,14 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     @Override
     public void onLoading(boolean pullDown) {
-        Log.e(TAG, "onLoading");
+        Log.e(TAG, "onLoadMoreIng");
         if (pullDown) {
             isRefreshing = true;
             getRecyclerView().removeCallbacks(timeOutPullDown);
             getRecyclerView().postDelayed(timeOutPullDown, LOADING_TIME_OUT);
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_ING, refreshHeader));
-            if (refreshDataAction != null) {
-                refreshDataAction.onRefreshing();
+            if (onRefreshData != null) {
+                onRefreshData.onRefreshing();
             }
             return;
         }
@@ -203,7 +203,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         getRecyclerView().removeCallbacks(timeOutPullUp);
         getRecyclerView().postDelayed(timeOutPullUp, LOADING_TIME_OUT);
         if (pullUpDataAction != null) {
-            pullUpDataAction.onLoading();
+            pullUpDataAction.onLoadMoreIng();
         }
     }
 
@@ -215,8 +215,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_FAIL, refreshHeader));
             scorllToTop();
             removeHeaderImmediately(false);
-            if (refreshDataAction != null) {
-                refreshDataAction.onRefreshFail();
+            if (onRefreshData != null) {
+                onRefreshData.onRefreshFail();
             }
             return;
         }
@@ -225,7 +225,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         scorllToBottom();
         removeFooterImmediately(false);
         if (pullUpDataAction != null) {
-            pullUpDataAction.onLoadFail();
+            pullUpDataAction.onLoadMoreFail();
         }
     }
 
@@ -237,8 +237,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshHeader));
             scorllToTop();
             removeHeaderImmediately(false);
-            if (refreshDataAction != null) {
-                refreshDataAction.onRefreshSuccess();
+            if (onRefreshData != null) {
+                onRefreshData.onRefreshSuccess();
             }
             return;
         }
@@ -248,7 +248,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         scorllToBottom();
         removeFooterImmediately(false);
         if (pullUpDataAction != null) {
-            pullUpDataAction.onLoadSuccess();
+            pullUpDataAction.onLoadMoreSuccess();
         }
     }
 
@@ -260,7 +260,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         scorllToBottom();
         removeFooterImmediately(false);
         if (pullUpDataAction != null) {
-            pullUpDataAction.onLoadNone();
+            pullUpDataAction.onLoadMoreNone();
         }
     }
 
@@ -321,7 +321,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     public void scorllToBottom() {
         RecyclerView recyclerView = getRecyclerView();
-        recyclerView.smoothScrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
+        recyclerView.scrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
     }
 
     public void scorllToTop() {
