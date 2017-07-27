@@ -26,9 +26,9 @@ public interface AdapterAction<Data> {
     void updateItem(int positon, Data data);
 
 
-    void setOnItemClick(AdapterListeners.OnItemClick onItemClick);
+    void setOnItemClick(AdapterListeners.OnItemClick<Data>  onItemClick);
 
-    void setOnItemLongClick(AdapterListeners.OnItemLongClick onItemLongClick);
+    void setOnItemLongClick(AdapterListeners.OnItemLongClick<Data>  onItemLongClick);
 
 
     RecyclerView getRecyclerView();

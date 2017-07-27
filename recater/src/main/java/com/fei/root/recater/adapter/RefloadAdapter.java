@@ -114,7 +114,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         this.onRefreshData = onRefreshData;
     }
 
-    public void setLoadMoreDataListener(OnLoadMoreData onLoadMoreData) {
+    public void setLoadMoreDataListener(OnLoadMoreData<Data> onLoadMoreData) {
         this.pullUpDataAction = onLoadMoreData;
     }
 

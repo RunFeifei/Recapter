@@ -13,7 +13,7 @@ import java.util.List;
  * 暂没有实现上拉下拉
  */
 
-public abstract class MultiAdapter<Data extends ItemWrapper> extends RecyclerView.Adapter<CommonHolder> {
+public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView.Adapter<CommonHolder> {
 
     private List<Data> listData;
     private SparseArray<Integer> sparseArray;
@@ -37,21 +37,27 @@ public abstract class MultiAdapter<Data extends ItemWrapper> extends RecyclerVie
         if (data == null) {
             throw new IllegalStateException("wrapper is null");
         }
-        Object object = data.getContent();
-        // TODO: 17-7-26 如果被包裹的类型是null 此时暂不处理 此时的null是否应该交于外部处理
-        if (object == null) {
-            return;
+        if (data instanceof ItemWrapper) {
+            ItemWrapper wrapper = (ItemWrapper) data;
+            Object object = wrapper.getContent();
+            // TODO: 17-7-26 如果被包裹的类型是null 此时暂不处理 此时的null是否应该交于外部处理
+            if (object == null) {
+                return;
+            }
+            if (object instanceof String && convert(holder, (String) object, position)) {
+                return;
+            }
+            if (object instanceof Integer && convert(holder, (Integer) object, position)) {
+                return;
+            }
+            if (object instanceof Boolean && convert(holder, (Boolean) object, position)) {
+                return;
+            }
+            if (convert(holder, wrapper, position)) {
+                return;
+            }
         }
-        if (object instanceof String && convert(holder, (String) object, position)) {
-            return;
-        }
-        if (object instanceof Integer && convert(holder, (Integer) object, position)) {
-            return;
-        }
-        if (object instanceof Boolean && convert(holder, (Boolean) object, position)) {
-            return;
-        }
-        convert(holder, data, position);
+        convert(holder, listData.get(position), position);
     }
 
     @Override
@@ -76,6 +82,7 @@ public abstract class MultiAdapter<Data extends ItemWrapper> extends RecyclerVie
 
     /**
      * 默认提供一下三种具体类型
+     *
      * @return true表示已消费该事件, 否则会继续执行{@link #convert(CommonHolder, ItemWrapper, int)}
      */
     protected boolean convert(CommonHolder holder, String data, int position) {
@@ -91,9 +98,17 @@ public abstract class MultiAdapter<Data extends ItemWrapper> extends RecyclerVie
     }
 
     /**
-     * 除了上述三种具体类型外,默认调用此方法
-     * @return true表示已消费该事件
+     * 除了上述三种具体类型外,提供包装类型
+     *
+     * @return true表示已消费该事件, 否则会继续执执行{@link #convert(CommonHolder, ItemModule, int)}
      */
-    protected abstract void convert(CommonHolder holder, ItemWrapper data, int position);
+    protected boolean convert(CommonHolder holder, ItemWrapper wrapper, int position) {
+        return false;
+    }
+
+    protected void convert(CommonHolder holder, ItemModule module, int position) {
+
+    }
+
 
 }

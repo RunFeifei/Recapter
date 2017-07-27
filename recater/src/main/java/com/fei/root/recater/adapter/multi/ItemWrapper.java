@@ -4,9 +4,9 @@ import android.support.annotation.Nullable;
 
 /**
  * Created by PengFeifei on 17-7-26.
- * 包裹bean or 自动装箱的基本类型 or String...
+ * 包裹自动装箱的基本类型 or String...
  */
-public class ItemWrapper<Data> {
+public class ItemWrapper<Data> implements ItemModule {
 
     private int layoutId;
     private Data content;
@@ -19,11 +19,12 @@ public class ItemWrapper<Data> {
         this.content = content;
     }
 
-    public int itemViewLayoutId() {
-        return layoutId;
-    }
-
     public Data getContent() {
         return content;
+    }
+
+    @Override
+    public int itemViewLayoutId() {
+        return layoutId;
     }
 }

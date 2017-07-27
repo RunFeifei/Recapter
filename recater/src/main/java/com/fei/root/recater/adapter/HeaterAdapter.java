@@ -293,7 +293,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     @Override
-    public void setOnItemClick(AdapterListeners.OnItemClick onItemClick) {
+    public void setOnItemClick(AdapterListeners.OnItemClick<Data> onItemClick) {
         if (onItemClick == null) {
             throw new NullPointerException("onItemClick can not be null");
         }

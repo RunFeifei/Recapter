@@ -10,6 +10,7 @@ import com.fei.root.multi.Cat;
 import com.fei.root.multi.Dog;
 import com.fei.root.multi.Person;
 import com.fei.root.recapter.R;
+import com.fei.root.recater.adapter.multi.ItemModule;
 import com.fei.root.recater.adapter.multi.MultiAdapter;
 import com.fei.root.recater.adapter.multi.ItemWrapper;
 import com.fei.root.recater.viewholder.CommonHolder;
@@ -24,7 +25,7 @@ public class MultipleActivity extends AppCompatActivity {
     @Binder
     private RecyclerView recyclerView;
 
-    private MultiAdapter multiAdapter;
+    private MultiAdapter<ItemModule> multiAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,10 @@ public class MultipleActivity extends AppCompatActivity {
     }
 
     private void init() {
-        List<ItemWrapper> list = new ArrayList<>();
-        list.add(new ItemWrapper<>(new Dog(), R.layout.item_00));
-        list.add(new ItemWrapper<>(new Cat(), R.layout.item_01));
-        list.add(new ItemWrapper<>(new Person(), R.layout.item_02));
+        List<ItemModule> list = new ArrayList<>();
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
 
         list.add(new ItemWrapper<String>("String", R.layout.item_00));
         list.add(new ItemWrapper<Integer>(123, R.layout.item_01));
@@ -48,7 +49,7 @@ public class MultipleActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        multiAdapter = new MultiAdapter<ItemWrapper>(list) {
+        multiAdapter = new MultiAdapter<ItemModule>(list) {
 
             @Override
             protected boolean convert(CommonHolder holder, String data, int position) {
@@ -70,8 +71,7 @@ public class MultipleActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void convert(CommonHolder holder, ItemWrapper data, int position) {
-                Object itemModule=data.getContent();
+            protected void convert(CommonHolder holder, ItemModule itemModule, int position) {
                 if (itemModule instanceof Dog) {
                     holder.setText(R.id.text, ((Dog) itemModule).name);
                 }
