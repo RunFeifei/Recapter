@@ -3,7 +3,7 @@ package com.fei.root;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,7 +12,6 @@ import com.fei.root.recapter.R;
 import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.adapter.RefloadAdapter;
-import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.DefaultRefreshHeaderView;
 import com.fei.root.recater.view.RefloadRecyclerView;
@@ -23,7 +22,7 @@ import com.fei.root.viewbinder.ViewBinder;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements OnLoadMoreData<String>,OnRefreshData<String> {
+public class MainActivity extends AppCompatActivity implements OnLoadMoreData<String>, OnRefreshData<String> {
 
     @Binder
     private TextView btn;
@@ -56,6 +55,26 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         list.add(i++ + "");
         list.add(i++ + "");
         list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
+        list.add(i++ + "");
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         commonAdapter = new RefloadAdapter<String>(list, R.layout.list_item) {
@@ -71,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         commonAdapter.setLoadMoreDataListener(this);
         commonAdapter.setEnablePullLoadMore(true);
         commonAdapter.setEnablePullRefreshing(true);
+        commonAdapter.setOnItemClick((s, v, p) ->  Log.e("TAG-->","data->"+s+"--adapterPosition-->"+p));
     }
 
     @Override
@@ -86,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
             } else {
                 commonAdapter.onLoadFail(false);
             }
-        }, 6000);
+        }, 3000);
     }
 
     @Override
@@ -104,12 +124,17 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
 
     }
 
+
+    int id;
+
     public void onClick(View view) {
-        Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
+        TextView textView=new TextView(this);
+        textView.setText("ssws");
+        id = commonAdapter.addHeader(textView);
     }
 
     public void onClick1(View view) {
-
+        commonAdapter.removeHeader(id);
     }
 
     @Override
@@ -122,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
             } else {
                 commonAdapter.onLoadFail(true);
             }
-        }, 6000);
+        }, 3000);
     }
 
     @Override
