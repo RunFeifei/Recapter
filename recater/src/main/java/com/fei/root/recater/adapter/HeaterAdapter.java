@@ -73,7 +73,6 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        Data data = getItemData(position);
         if (position < size(headers)) {
             if (onHeaderClick != null) {
                 holder.itemView.setOnClickListener(view -> onHeaderClick.onHeaderClick(view, position));
@@ -82,18 +81,16 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         }
         if (footers != null && position >= size(lisData) + size(headers)) {
             if (onFooterClick != null) {
-                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position-size(headers)-size(lisData)));
+                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position - size(headers) - size(lisData)));
             }
             return;
         }
+        Data data = getItemData(position);
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position-size(headers)));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position - size(headers)));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position-size(headers)));
-        }
-        if (size(lisData) <= position - size(headers)) {
-            return;
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position - size(headers)));
         }
         convert(holder, data, position - size(headers));
     }
@@ -323,10 +320,11 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public Data getItemData(int position) {
-        if (size(lisData) <= position - size(headers)) {
+        position = position - size(headers);
+        if (size(lisData) <= position || position < 0) {
             return null;
         }
-        return lisData.get(position - size(headers));
+        return lisData.get(position);
     }
 
     @Override
