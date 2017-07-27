@@ -23,8 +23,8 @@ import java.util.List;
 
 public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHolder> implements HeaterAdapterAction<Data> {
 
-    private SparseArray<View> headers;
-    private SparseArray<View> footers;
+    protected SparseArray<View> headers;
+    protected SparseArray<View> footers;
 
     private RecyclerView recyclerView;
 
@@ -34,10 +34,10 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     private AdapterListeners.OnFooterClick onFooterClick;
 
     private List<Data> lisData;
-    private int layoutId;
+    protected int layoutId;
 
-    private static int UNIQUE_ID_HEADER = Integer.MIN_VALUE / 2;
-    private static int UNIQUE_ID_FOOTER = Integer.MIN_VALUE / 2;
+    private static int UNIQUE_ID_HEADER = -1;
+    private static int UNIQUE_ID_FOOTER = 1;
     private final String TAG = HeaterAdapter.this.getClass().getSimpleName();
 
     public HeaterAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
@@ -57,7 +57,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         if (footers != null && position >= size(lisData) + size(headers)) {
             return footers.keyAt(position - size(lisData) - size(headers));
         }
-        return Integer.MIN_VALUE / 2;
+        return 0;
     }
 
     @Override
@@ -85,14 +85,16 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             }
             return;
         }
+        //// TODO: 17-7-27 Position不是很准确
+        int layoutPosition = holder.getLayoutPosition();
         Data data = getItemData(position);
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position - size(headers)));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, layoutPosition));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position - size(headers)));
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, layoutPosition));
         }
-        convert(holder, data, position - size(headers));
+        convert(holder, data, layoutPosition);
     }
 
     protected abstract void convert(CommonHolder holder, Data data, int position);

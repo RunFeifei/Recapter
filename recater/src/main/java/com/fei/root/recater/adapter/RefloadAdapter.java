@@ -2,22 +2,25 @@ package com.fei.root.recater.adapter;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
-
 import com.fei.root.recater.LoadingType;
 import com.fei.root.recater.action.OnLoadMoreData;
+import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.action.RefloadAdapterAction;
 import com.fei.root.recater.action.RefloadViewAction;
-import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.listener.AbsAnimatorListener;
+import com.fei.root.recater.viewholder.CommonHolder;
+import com.feifei.common.MultiApplication;
 
 import java.util.List;
 
@@ -62,6 +65,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         recyclerView.setOnTouchListener(this);
+        recyclerView.setClickable(true);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -70,12 +74,23 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-               /* View lastChildView = recyclerView.getLayoutManager().findViewByPosition(getItemCount() - getFootersSize() - 1);
-                boolean isLastItemVisible = lastChildView != null;
-                Log.e(TAG, "isLastItemVisible-->" + isLastItemVisible);*/
                 isBeyondScreen = getRecyclerView().getLayoutManager().getChildCount() < getItemCount() - getFootersSize();
             }
         });
+    }
+
+    @Override
+    public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (headers != null && headers.get(viewType, null) != null) {
+            return CommonHolder.create(headers.get(viewType));
+        }
+        if (footers != null && footers.get(viewType, null) != null) {
+            return CommonHolder.create(footers.get(viewType));
+        }
+        View itemView = getlayoutInflate().inflate(layoutId, parent, false);
+        itemView.setClickable(true);
+        itemView.setOnTouchListener(this);
+        return CommonHolder.create(itemView);
     }
 
     private View getPullView(@LoadingType int type, RefloadViewAction refloadViewAction) {
@@ -122,19 +137,20 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touchDownY = event.getY();
+                touchDownY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
+                float move = event.getRawY() - touchDownY;
                 if (isEnablePullRefreshing && !isRefreshing
                         && !getRecyclerView().canScrollVertically(-1)
-                        && event.getY() - touchDownY > getTouchSlop()) {
-                    onLoadStart(event.getY() - touchDownY, true);
+                        && move > getTouchSlop()) {
+                    onLoadStart(event.getRawY() - touchDownY, true);
                     return true;
                 }
                 if (isEnablePullLoadMore && !isLoading
                         && !getRecyclerView().canScrollVertically(1)
-                        && touchDownY - event.getY() > 0 && isBeyondScreen) {
-                    onLoadStart(event.getY() - touchDownY, false);
+                        && -move > 0 && isBeyondScreen) {
+                    onLoadStart(event.getRawY() - touchDownY, false);
                     return true;
                 }
                 break;
@@ -160,8 +176,8 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
                 layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 view.setLayoutParams(layoutParams);
             }
-            int height=(int) deltaY;
-//            int height = Math.min((int) deltaY / 3, 300);
+            //            int height=(int) deltaY;
+            int height = Math.min((int) deltaY / 2, 300);
             height = height <= getTouchSlop() / 2 ? 0 : height;
             if (height == 0) {
                 removeHeaderImmediately(true);
@@ -186,7 +202,6 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     @Override
     public void onLoading(boolean pullDown) {
-        Log.e(TAG, "onLoadMoreIng");
         if (pullDown) {
             isRefreshing = true;
             getRecyclerView().removeCallbacks(timeOutPullDown);
@@ -334,5 +349,9 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     public void setEnablePullLoadMore(boolean enablePullLoadMore) {
         isEnablePullLoadMore = enablePullLoadMore;
+    }
+
+    private LayoutInflater getlayoutInflate() {
+        return (LayoutInflater) MultiApplication.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }

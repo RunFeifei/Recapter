@@ -29,16 +29,6 @@ public class RefloadRecyclerView extends RecyclerView {
         setRecycledViewPool(new RecycledViewPools());
     }
 
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-    }
-
-    @Override
-    public void onScrolled(int dx, int dy) {
-        super.onScrolled(dx, dy);
-    }
-
     /**
      * RecycledViewPool其实是不支持自定义的
      * 即使把RecycledViewPool的源码copy一份也不支持,因为ViewHolder有一个resetInternal()方法是包可见的...
@@ -58,6 +48,4 @@ public class RefloadRecyclerView extends RecyclerView {
             return super.getRecycledView(viewType);
         }
     }
-
-
 }
