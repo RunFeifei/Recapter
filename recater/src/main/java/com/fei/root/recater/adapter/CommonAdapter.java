@@ -4,7 +4,6 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-
 import com.fei.root.recater.action.AdapterAction;
 import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.viewholder.CommonHolder;
@@ -24,8 +23,8 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     private RecyclerView recyclerView;
 
-    private AdapterListeners.OnItemClick onItemClick;
-    private AdapterListeners.OnItemLongClick onItemLongClick;
+    private AdapterListeners.OnItemClick<Data> onItemClick;
+    private AdapterListeners.OnItemLongClick<Data> onItemLongClick;
 
     public CommonAdapter(List<Data> listData, @LayoutRes int layoutId) {
         this.listData = listData;
@@ -39,11 +38,12 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
+        Data data=getItemData(position);
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(), view, position));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position));
         }
         convert(holder, listData.get(position), position);
     }
@@ -137,6 +137,14 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public List<Data> getDataList() {
         return listData;
+    }
+
+    @Override
+    public Data getItemData(int position) {
+        if (size(listData) <= position) {
+            return null;
+        }
+        return listData.get(position);
     }
 
     private int size(Collection collection) {

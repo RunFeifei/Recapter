@@ -65,11 +65,6 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
             }
         };
         recyclerView.setAdapter(commonAdapter);
-        commonAdapter.setOnHeaderClick(new AdapterListeners.OnHeaderClick() {
-            @Override
-            public void onHeaderClick(RecyclerView recyclerView, View header, int Position) {
-            }
-        });
         commonAdapter.setRefreshHeader(new DefaultRefreshHeaderView(this));
         commonAdapter.setLoadMoreFooter(new DefaultRefreshFooterView(this));
         commonAdapter.setRefreshDataListener(this);

@@ -35,4 +35,6 @@ public interface AdapterAction<Data> {
 
     List<Data> getDataList();
 
+    Data getItemData(int position);
+
 }

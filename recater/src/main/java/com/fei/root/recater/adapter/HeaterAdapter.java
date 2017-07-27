@@ -28,8 +28,8 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     private RecyclerView recyclerView;
 
-    private AdapterListeners.OnItemClick onItemClick;
-    private AdapterListeners.OnItemLongClick onItemLongClick;
+    private AdapterListeners.OnItemClick<Data> onItemClick;
+    private AdapterListeners.OnItemLongClick<Data> onItemLongClick;
     private AdapterListeners.OnHeaderClick onHeaderClick;
     private AdapterListeners.OnFooterClick onFooterClick;
 
@@ -73,32 +73,29 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
+        Data data = getItemData(position);
         if (position < size(headers)) {
             if (onHeaderClick != null) {
-                holder.itemView.setOnClickListener(view -> onHeaderClick.onHeaderClick(getRecyclerView(), view, position));
+                holder.itemView.setOnClickListener(view -> onHeaderClick.onHeaderClick(view, position));
             }
             return;
         }
         if (footers != null && position >= size(lisData) + size(headers)) {
             if (onFooterClick != null) {
-                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(getRecyclerView(), view, position));
+                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position));
             }
             return;
         }
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(getRecyclerView(), view, position));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(getRecyclerView(), view, position));
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position));
         }
         if (size(lisData) <= position - size(headers)) {
             return;
         }
-        Data data = lisData.get(position - size(headers));
-        if (data == null) {
-            return;
-        }
-        convert(holder, lisData.get(position - size(headers)), position - size(headers));
+        convert(holder, data, position - size(headers));
     }
 
     protected abstract void convert(CommonHolder holder, Data data, int position);
@@ -322,6 +319,14 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public List<Data> getDataList() {
         return lisData;
+    }
+
+    @Override
+    public Data getItemData(int position) {
+        if (size(lisData) <= position - size(headers)) {
+            return null;
+        }
+        return lisData.get(position - size(headers));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.fei.root.recater.listener;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -9,19 +8,19 @@ import android.view.View;
 
 public interface AdapterListeners {
 
-    interface OnItemClick {
-        void onItemClick(RecyclerView recyclerView, View header, int Position);
+    interface OnItemClick<Data> {
+        void onItemClick(Data data, View header, int Position);
     }
 
-    interface OnItemLongClick {
-        boolean onItemLongClick(RecyclerView recyclerView, View header, int Position);
+    interface OnItemLongClick<Data> {
+        boolean onItemLongClick(Data data, View header, int Position);
     }
 
     interface OnHeaderClick {
-        void onHeaderClick(RecyclerView recyclerView, View header, int Position);
+        void onHeaderClick(View header, int Position);
     }
 
     interface OnFooterClick {
-        void onHeaderClick(RecyclerView recyclerView, View footer, int Position);
+        void onHeaderClick(View footer, int Position);
     }
 }
