@@ -82,15 +82,15 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         }
         if (footers != null && position >= size(lisData) + size(headers)) {
             if (onFooterClick != null) {
-                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position));
+                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position-size(headers)-size(lisData)));
             }
             return;
         }
         if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position));
+            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position-size(headers)));
         }
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position));
+            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position-size(headers)));
         }
         if (size(lisData) <= position - size(headers)) {
             return;
