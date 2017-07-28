@@ -80,7 +80,7 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
         return view;
     }
 
-    private <T extends View> T findView(int id) {
+    public  <T extends View> T findView(int id) {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);

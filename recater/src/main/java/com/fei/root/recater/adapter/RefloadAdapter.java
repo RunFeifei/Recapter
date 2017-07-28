@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,8 +32,7 @@ import java.util.List;
 public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implements View.OnTouchListener, RefloadAdapterAction {
 
     public static final int REFRESH_HEADER_ID = Integer.MIN_VALUE;
-    public static final int LOAD_FOOTER_ID = 0;
-    private static final String TAG = RefloadAdapter.class.getSimpleName();
+    public static final int LOAD_FOOTER_ID = Integer.MAX_VALUE;
 
     private boolean isEnablePullRefreshing;
     private boolean isEnablePullLoadMore;
