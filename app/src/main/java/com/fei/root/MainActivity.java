@@ -1,6 +1,5 @@
 package com.fei.root;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         list.add(i++ + "");
         list.add(i++ + "");
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.addItemDecoration(new DividerDecoration(ContextCompat.getColor(this,R.color.colorAccent)));
+        recyclerView.addItemDecoration(new DividerDecoration(ContextCompat.getColor(this, R.color.colorAccent)));
 
         commonAdapter = new RefloadAdapter<String>(list, R.layout.list_item) {
             @Override
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         commonAdapter.setLoadMoreDataListener(this);
         commonAdapter.setEnablePullLoadMore(true);
         commonAdapter.setEnablePullRefreshing(true);
-        commonAdapter.setOnItemClick((s, v, p) ->  Log.e("TAG-->","data->"+s+"--adapterPosition-->"+p));
+        commonAdapter.setOnItemClick((s, v, p) -> Log.e("TAG-->", "data->" + s + "--adapterPosition-->" + p));
     }
 
     @Override

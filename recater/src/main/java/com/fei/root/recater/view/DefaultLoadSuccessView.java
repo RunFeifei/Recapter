@@ -1,52 +1,69 @@
 package com.fei.root.recater.view;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.fei.root.recater.R;
+import com.airbnb.lottie.LottieAnimationView;
 
 
 /**
  * Created by PengFeifei on 17-7-19.
  */
 
-public class DefaultLoadSuccessView extends DefaultLoadStartView {
+public class DefaultLoadSuccessView extends LinearLayout {
 
 
     public DefaultLoadSuccessView(Context context) {
         super(context);
+        init(context, null);
     }
 
     public DefaultLoadSuccessView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context, null);
     }
 
-    @Override
     protected void init(Context context, @Nullable AttributeSet attrs) {
-        super.init(context, attrs);
+        setGravity(Gravity.CENTER);
+        setOrientation(HORIZONTAL);
+        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 150));
+
+
+        LayoutParams layoutParams = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f);
+        layoutParams.gravity = Gravity.CENTER;
+
+        TextView textView = new TextView(context);
+        textView.setTextSize(15);
         textView.setText("刷新成功");
-        imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_check_to_on_mtrl_015));
-        imageView.setVisibility(INVISIBLE);
-        imageView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        textView.setLayoutParams(layoutParams);
+        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        textView.setPadding(50, 0, 0, 0);
+
+        LottieAnimationView lottieView = new LottieAnimationView(context);
+        lottieView.setLayoutParams(layoutParams);
+        lottieView.setPadding(0, 0, 50, 0);
+        lottieView.setAnimation("done.json");
+        lottieView.setScaleType(ImageView.ScaleType.FIT_END);
+        lottieView.loop(false);
+
+        lottieView.addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Animator animator = ViewAnimationUtils.createCircularReveal(v, 0,
-                        v.getHeight(), 0, (float) Math.hypot(v.getWidth(), v.getHeight()));
-                animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                animator.setDuration(700);
-                try {
-                    animator.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                v.setVisibility(VISIBLE);
+            public void onViewAttachedToWindow(View v) {
+                lottieView.playAnimation();
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                lottieView.pauseAnimation();
             }
         });
+        addView(lottieView);
+        addView(textView);
     }
 }
