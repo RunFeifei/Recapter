@@ -6,13 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.fei.root.recapter.R;
+import com.fei.root.viewbinder.ViewBinder;
 
 public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        View view = getLayoutInflater().inflate(R.layout.activity_splash, null);
+        setContentView(view);
+        ViewBinder.bindViews(this, view);
     }
 
     public void onClick(View view) {
