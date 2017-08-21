@@ -46,9 +46,6 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapt
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        if (size(listData) <= position) {
-            return;
-        }
         if (position < size(headers)) {
             return;
         }
@@ -57,6 +54,7 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapt
         }
         int layoutPosition = holder.getLayoutPosition() - size(headers);
         Data data = getItemData(position);
+        position=position-size(headers);
         if (onItemClick != null) {
             holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, layoutPosition));
         }

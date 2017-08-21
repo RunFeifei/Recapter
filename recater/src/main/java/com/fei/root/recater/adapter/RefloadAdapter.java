@@ -19,6 +19,7 @@ import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.action.RefloadAdapterAction;
 import com.fei.root.recater.action.RefloadViewAction;
 import com.fei.root.recater.listener.AbsAnimatorListener;
+import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
 
 import java.util.List;
@@ -70,6 +71,9 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        if (!(recyclerView instanceof RefloadRecyclerView)) {
+            throw new IllegalStateException("adapter only works with efloadRecyclerView.java");
+        }
         recyclerView.setOnTouchListener(this);
         recyclerView.setClickable(true);
 
@@ -88,15 +92,15 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (headers != null && headers.get(viewType, null) != null) {
-            return CommonHolder.create(parent.getContext(),headers.get(viewType));
+            return CommonHolder.create(parent.getContext(), headers.get(viewType));
         }
         if (footers != null && footers.get(viewType, null) != null) {
-            return CommonHolder.create(parent.getContext(),footers.get(viewType));
+            return CommonHolder.create(parent.getContext(), footers.get(viewType));
         }
         View itemView = getlayoutInflate(parent.getContext()).inflate(layoutId, parent, false);
         itemView.setClickable(true);
         itemView.setOnTouchListener(this);
-        return CommonHolder.create(parent.getContext(),itemView);
+        return CommonHolder.create(parent.getContext(), itemView);
     }
 
     private View getPullView(@LoadingType int type, RefloadViewAction refloadViewAction) {
@@ -182,21 +186,19 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
                 layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 view.setLayoutParams(layoutParams);
             }
-            //            int height=(int) deltaY;
             int height = Math.min((int) deltaY / 2, 300);
-            height = height <= getTouchSlop() / 2 ? 0 : height;
+            height = height <= getTouchSlop() ? 0 : height;
             if (height == 0) {
                 removeHeaderImmediately(true);
                 return;
             }
             layoutParams.height = height;
             view.setLayoutParams(layoutParams);
-            Log.e("TAG-->",view.getLayoutParams().height+"");
             return;
         }
         boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
         if (isReadyToLoad) {
-            onLoading(false);
+            getRecyclerView().postDelayed(() -> onLoading(false), 200);
             return;
         }
         View view = getPullView(LoadingType.LOAD_START, refreshFooter);

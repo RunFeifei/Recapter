@@ -27,4 +27,9 @@ public class ItemWrapper<Data> implements ItemModule {
     public int itemViewLayoutId() {
         return layoutId;
     }
+
+    @Override
+    public String toString() {
+        return "layoutId-->"+layoutId+"  content-->"+content.toString();
+    }
 }
