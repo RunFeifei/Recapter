@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +57,14 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     public RefloadAdapter(@LayoutRes int layoutId) {
         super(layoutId);
+    }
+
+    /**
+     * Attention!!
+     * just add for MultiAdapter
+     */
+    protected RefloadAdapter(List<Data> listData) {
+        super(listData);
     }
 
     @Override
@@ -182,6 +191,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             }
             layoutParams.height = height;
             view.setLayoutParams(layoutParams);
+            Log.e("TAG-->",view.getLayoutParams().height+"");
             return;
         }
         boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
