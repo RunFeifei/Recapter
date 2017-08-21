@@ -33,7 +33,7 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return CommonHolder.create(parent, layoutId);
+        return CommonHolder.create(parent.getContext(),parent, layoutId);
     }
 
     @Override

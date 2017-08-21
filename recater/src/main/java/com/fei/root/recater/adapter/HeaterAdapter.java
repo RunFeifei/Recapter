@@ -63,12 +63,12 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (headers != null && headers.get(viewType, null) != null) {
-            return CommonHolder.create(headers.get(viewType));
+            return CommonHolder.create(parent.getContext(),headers.get(viewType));
         }
         if (footers != null && footers.get(viewType, null) != null) {
-            return CommonHolder.create(footers.get(viewType));
+            return CommonHolder.create(parent.getContext(),footers.get(viewType));
         }
-        return CommonHolder.create(parent, layoutId);
+        return CommonHolder.create(parent.getContext(),parent, layoutId);
     }
 
     @Override

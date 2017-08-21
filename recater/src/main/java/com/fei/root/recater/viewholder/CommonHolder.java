@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.feifei.common.MultiApplication;
-
 
 /**
  * Created by PengFeifei on 17-7-12.
@@ -25,19 +23,21 @@ import com.feifei.common.MultiApplication;
 public class CommonHolder<Data> extends RecyclerView.ViewHolder {
 
     private SparseArray<View> views;
+    private Context context;
 
-    private CommonHolder(@NonNull View itemView) {
+    private CommonHolder(@NonNull View itemView,Context context) {
         super(itemView);
         views = new SparseArray<>();
+        this.context =context;
     }
 
-    public static CommonHolder create(View itemView) {
-        return new CommonHolder(itemView);
+    public static CommonHolder create(Context context,View itemView) {
+        return new CommonHolder(itemView,context);
     }
 
-    public static CommonHolder create(ViewGroup parent, @LayoutRes int layoutId) {
-        View itemView = getlayoutInflate().inflate(layoutId, parent, false);
-        return new CommonHolder(itemView);
+    public static CommonHolder create(Context context,ViewGroup parent, @LayoutRes int layoutId) {
+        View itemView = getlayoutInflate(context).inflate(layoutId, parent, false);
+        return new CommonHolder(itemView,context);
     }
 
     public CommonHolder setImageResource(int viewId, @DrawableRes int resId) {
@@ -92,8 +92,8 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
-    private static LayoutInflater getlayoutInflate() {
-        return (LayoutInflater) MultiApplication.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private static LayoutInflater getlayoutInflate(Context context) {
+        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
 }

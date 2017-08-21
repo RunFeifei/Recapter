@@ -29,7 +29,7 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView
 
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return CommonHolder.create(parent, sparseArray.get(viewType));
+        return CommonHolder.create(parent.getContext(),parent, sparseArray.get(viewType));
     }
 
     @Override

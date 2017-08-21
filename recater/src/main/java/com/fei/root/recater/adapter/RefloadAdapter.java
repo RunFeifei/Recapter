@@ -19,7 +19,6 @@ import com.fei.root.recater.action.RefloadAdapterAction;
 import com.fei.root.recater.action.RefloadViewAction;
 import com.fei.root.recater.listener.AbsAnimatorListener;
 import com.fei.root.recater.viewholder.CommonHolder;
-import com.feifei.common.MultiApplication;
 
 import java.util.List;
 
@@ -80,15 +79,15 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (headers != null && headers.get(viewType, null) != null) {
-            return CommonHolder.create(headers.get(viewType));
+            return CommonHolder.create(parent.getContext(),headers.get(viewType));
         }
         if (footers != null && footers.get(viewType, null) != null) {
-            return CommonHolder.create(footers.get(viewType));
+            return CommonHolder.create(parent.getContext(),footers.get(viewType));
         }
-        View itemView = getlayoutInflate().inflate(layoutId, parent, false);
+        View itemView = getlayoutInflate(parent.getContext()).inflate(layoutId, parent, false);
         itemView.setClickable(true);
         itemView.setOnTouchListener(this);
-        return CommonHolder.create(itemView);
+        return CommonHolder.create(parent.getContext(),itemView);
     }
 
     private View getPullView(@LoadingType int type, RefloadViewAction refloadViewAction) {
@@ -349,7 +348,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         isEnablePullLoadMore = enablePullLoadMore;
     }
 
-    private LayoutInflater getlayoutInflate() {
-        return (LayoutInflater) MultiApplication.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private LayoutInflater getlayoutInflate(Context context) {
+        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }
