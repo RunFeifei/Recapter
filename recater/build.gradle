@@ -47,8 +47,8 @@ dependencies {
 }
 
 publish {
-    userOrg = 'feifei'      // bintray注册的用户名
+    userOrg = 'feifei'
     groupId = 'com.bintray.run'
-    artifactId = 'recater'// bintray创建的package
+    artifactId = 'recater'
     publishVersion = '1.0.1'
 }
