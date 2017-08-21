@@ -49,6 +49,33 @@ public class MultipleActivity extends AppCompatActivity implements OnLoadMoreDat
         list.add(new Dog());
         list.add(new Cat());
         list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
+        list.add(new Dog());
+        list.add(new Cat());
+        list.add(new Person());
 
         list.add(new ItemWrapper<String>("String", R.layout.item_01));
         list.add(new ItemWrapper<Integer>(123, R.layout.item_01));
@@ -115,8 +142,9 @@ public class MultipleActivity extends AppCompatActivity implements OnLoadMoreDat
             } else {
                 multiAdapter.onLoadFail(false);
             }*/
-            multiAdapter.appendItem(new ItemWrapper<Integer>(1111, R.layout.item_00));
+            multiAdapter.appendItem(new ItemWrapper<String>("onLoadMoreIng", R.layout.item_00));
             multiAdapter.onLoadSuccess(false);
+//            multiAdapter.onLoadFail(false);
         }, 3000);
     }
 

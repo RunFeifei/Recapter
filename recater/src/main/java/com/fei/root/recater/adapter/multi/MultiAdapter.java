@@ -3,6 +3,7 @@ package com.fei.root.recater.adapter.multi;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.fei.root.recater.adapter.RefloadAdapter;
@@ -41,7 +42,11 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapt
         if (footers != null && footers.get(viewType, null) != null) {
             return CommonHolder.create(parent.getContext(), footers.get(viewType));
         }
-        return CommonHolder.create(parent.getContext(), parent, sparseArray.get(viewType));
+
+        View itemView = getlayoutInflate(parent.getContext()).inflate(sparseArray.get(viewType), parent, false);
+        itemView.setClickable(true);
+        itemView.setOnTouchListener(this);
+        return CommonHolder.create(parent.getContext(),itemView);
     }
 
     @Override
@@ -115,13 +120,10 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapt
     /**
      * 除了上述三种具体类型外,提供包装类型
      *
-     * @return true表示已消费该事件, 否则会继续执执行{@link #convert(CommonHolder, ItemModule, int)}
+     * @return true表示已消费该事件, 否则会继续执执行{@link # super.convert(CommonHolder, Data, int)}
      */
     protected boolean convert(CommonHolder holder, ItemWrapper wrapper, int position) {
         return false;
     }
 
-    protected void convert(CommonHolder holder, ItemModule module, int position) {
-
-    }
 }

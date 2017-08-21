@@ -41,46 +41,46 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
     }
 
     public CommonHolder setImageResource(int viewId, @DrawableRes int resId) {
-        ImageView view = findView(viewId);
+        ImageView view = getView(viewId);
         view.setImageResource(resId);
         return this;
     }
 
     public CommonHolder setImageResource(int viewId, Drawable drawable) {
-        ImageView view = findView(viewId);
+        ImageView view = getView(viewId);
         view.setImageDrawable(drawable);
         return this;
     }
 
     public CommonHolder setImageResource(int viewId, Bitmap bitmap) {
-        ImageView view = findView(viewId);
+        ImageView view = getView(viewId);
         view.setImageBitmap(bitmap);
         return this;
     }
 
     public ImageView getImageView(int viewId) {
-        ImageView view = findView(viewId);
+        ImageView view = getView(viewId);
         return view;
     }
 
     public CommonHolder setText(int viewId, CharSequence text) {
-        TextView tv = findView(viewId);
+        TextView tv = getView(viewId);
         tv.setText(text);
         return this;
     }
 
     public CommonHolder setTextColor(int viewId, @ColorInt int textColor) {
-        TextView view = findView(viewId);
+        TextView view = getView(viewId);
         view.setTextColor(textColor);
         return this;
     }
 
     public TextView getTextView(int viewId) {
-        TextView view = findView(viewId);
+        TextView view = getView(viewId);
         return view;
     }
 
-    public  <T extends View> T findView(int id) {
+    public  <T extends View> T getView(int id) {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
@@ -89,7 +89,7 @@ public class CommonHolder<Data> extends RecyclerView.ViewHolder {
         if (view == null) {
             throw new RuntimeException("can not find view in CommonHolder");
         }
-        return (T) view;
+        return ((T) view);
     }
 
     private static LayoutInflater getlayoutInflate(Context context) {

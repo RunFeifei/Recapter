@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -197,8 +196,9 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             return;
         }
         boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
-        if (isReadyToLoad) {
-            getRecyclerView().postDelayed(() -> onLoading(false), 200);
+        if (isReadyToLoad && !isLoading) {
+            getRecyclerView().postDelayed(() -> onLoading(false), 500);
+            isLoading = true;
             return;
         }
         View view = getPullView(LoadingType.LOAD_START, refreshFooter);
@@ -233,9 +233,9 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     @Override
     public void onLoadFail(boolean pulldown) {
-        isRefreshing = false;
         getRecyclerView().removeCallbacks(pulldown ? timeOutPullDown : timeOutPullUp);
         if (pulldown) {
+            isRefreshing = false;
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_FAIL, refreshHeader));
             scorllToTop();
             removeHeaderImmediately(false);
@@ -360,7 +360,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         isEnablePullLoadMore = enablePullLoadMore;
     }
 
-    private LayoutInflater getlayoutInflate(Context context) {
+    protected LayoutInflater getlayoutInflate(Context context) {
         return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }

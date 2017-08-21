@@ -101,14 +101,15 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         Toast.makeText(this, "onLoadMoreIng", Toast.LENGTH_SHORT).show();
         int result = new Random(100).nextInt();
         recyclerView.postDelayed(() -> {
-            if (result % 2 == 0) {
-                commonAdapter.appendItem("load");
-                commonAdapter.onLoadSuccess(false);
-            } else if (result % 3 == 0) {
-                commonAdapter.onLoadNone();
-            } else {
-                commonAdapter.onLoadFail(false);
-            }
+            //            if (result % 2 == 0) {
+            //                commonAdapter.appendItem("load");
+            //                commonAdapter.onLoadSuccess(false);
+            //            } else if (result % 3 == 0) {
+            //                commonAdapter.onLoadNone();
+            //            } else {
+            //            }
+            commonAdapter.appendItem("load");
+            commonAdapter.onLoadSuccess(false);
         }, 3000);
     }
 
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
     int id;
 
     public void onClick(View view) {
-        TextView textView=new TextView(this);
+        TextView textView = new TextView(this);
         textView.setText("ssws");
         id = commonAdapter.addHeader(textView);
     }
