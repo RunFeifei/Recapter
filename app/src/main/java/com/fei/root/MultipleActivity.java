@@ -3,16 +3,21 @@ package com.fei.root;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.fei.root.multi.Cat;
 import com.fei.root.multi.Dog;
 import com.fei.root.multi.Person;
 import com.fei.root.recapter.R;
+import com.fei.root.recater.action.OnLoadMoreData;
+import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.adapter.multi.ItemModule;
-import com.fei.root.recater.adapter.multi.MultiAdapter;
 import com.fei.root.recater.adapter.multi.ItemWrapper;
+import com.fei.root.recater.adapter.multi.MultiAdapter;
+import com.fei.root.recater.view.DefaultRefreshFooterView;
+import com.fei.root.recater.view.DefaultRefreshHeaderView;
+import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
 import com.fei.root.viewbinder.Binder;
 import com.fei.root.viewbinder.ViewBinder;
@@ -20,10 +25,10 @@ import com.fei.root.viewbinder.ViewBinder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipleActivity extends AppCompatActivity {
+public class MultipleActivity extends AppCompatActivity implements OnLoadMoreData<ItemModule>, OnRefreshData<ItemModule> {
 
     @Binder
-    private RecyclerView recyclerView;
+    private RefloadRecyclerView recyclerView;
 
     private MultiAdapter<ItemModule> multiAdapter;
 
@@ -84,7 +89,48 @@ public class MultipleActivity extends AppCompatActivity {
             }
         };
         recyclerView.setAdapter(multiAdapter);
+        multiAdapter.setEnablePullLoadMore(true);
+        multiAdapter.setEnablePullRefreshing(true);
+        multiAdapter.setRefreshHeader(new DefaultRefreshHeaderView(this));
+        multiAdapter.setLoadMoreFooter(new DefaultRefreshFooterView(this));
+        multiAdapter.setOnItemClick((s, v, p) -> Log.e("TAG-->", "data->" + s + "--adapterPosition-->" + p));
+        multiAdapter.setRefreshDataListener(this);
+        multiAdapter.setLoadMoreDataListener(this);
     }
 
 
+    @Override
+    public void onRefreshing() {
+
+    }
+
+    @Override
+    public void onLoadMoreIng() {
+
+    }
+
+    @Override
+    public void onRefreshFail() {
+
+    }
+
+    @Override
+    public void onLoadMoreFail() {
+
+    }
+
+    @Override
+    public void onRefreshSuccess() {
+
+    }
+
+    @Override
+    public void onLoadMoreSuccess() {
+
+    }
+
+    @Override
+    public void onLoadMoreNone() {
+
+    }
 }

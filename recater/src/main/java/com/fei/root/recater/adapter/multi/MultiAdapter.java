@@ -1,35 +1,47 @@
 package com.fei.root.recater.adapter.multi;
 
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import com.fei.root.recater.action.AdapterAction;
-import com.fei.root.recater.listener.AdapterListeners;
+import com.fei.root.recater.adapter.RefloadAdapter;
 import com.fei.root.recater.viewholder.CommonHolder;
 
 import java.util.List;
 
 /**
  * Created by PengFeifei on 17-7-26.
- * 暂没有实现上拉下拉
  */
 
-public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView.Adapter<CommonHolder> implements AdapterAction<Data> {
+public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapter<Data> {
 
-    private List<Data> listData;
     private SparseArray<Integer> sparseArray;
 
-    private AdapterListeners.OnItemClick<Data> onItemClick;
-
-    public MultiAdapter(List<Data> listData) {
-        this.listData = listData;
+    protected MultiAdapter(List<Data> listData) {
+        super(listData);
         sparseArray = new SparseArray<>();
+    }
+
+    private MultiAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
+        super(lisData, layoutId);
+        throw new IllegalStateException("forbidden");
+    }
+
+    private MultiAdapter(@LayoutRes int layoutId) {
+        super(layoutId);
+        throw new IllegalStateException("forbidden");
     }
 
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return CommonHolder.create(parent.getContext(),parent, sparseArray.get(viewType));
+        if (headers != null && headers.get(viewType, null) != null) {
+            return CommonHolder.create(parent.getContext(), headers.get(viewType));
+        }
+        if (footers != null && footers.get(viewType, null) != null) {
+            return CommonHolder.create(parent.getContext(), footers.get(viewType));
+        }
+        return CommonHolder.create(parent.getContext(), parent, sparseArray.get(viewType));
     }
 
     @Override
@@ -37,12 +49,17 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView
         if (size(listData) <= position) {
             return;
         }
-        int layoutPosition = holder.getLayoutPosition();
+        if (position < size(headers)) {
+            return;
+        }
+        if (footers != null && position >= size(listData) + size(headers)) {
+            return;
+        }
+        int layoutPosition = holder.getLayoutPosition() - size(headers);
         Data data = getItemData(position);
         if (onItemClick != null) {
             holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, layoutPosition));
         }
-
         if (data instanceof ItemWrapper) {
             ItemWrapper wrapper = (ItemWrapper) data;
             Object object = wrapper.getContent();
@@ -63,27 +80,21 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView
                 return;
             }
         }
-        convert(holder, listData.get(position), position);
+        convert(holder, data, position);
     }
 
     @Override
     public int getItemViewType(int position) {
-        Data data = listData.get(position);
+        if (position < size(headers)) {
+            return headers.keyAt(position);
+        }
+        if (footers != null && position >= size(listData) + size(headers)) {
+            return footers.keyAt(position - size(listData) - size(headers));
+        }
+        Data data = getItemData(position);
         int itemViewType = data.itemViewLayoutId();
         sparseArray.put(itemViewType, itemViewType);
         return itemViewType;
-    }
-
-    @Override
-    public int getItemCount() {
-        return size(listData);
-    }
-
-    private int size(List list) {
-        if (list == null) {
-            return 0;
-        }
-        return list.size();
     }
 
     /**
@@ -114,66 +125,5 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RecyclerView
 
     protected void convert(CommonHolder holder, ItemModule module, int position) {
 
-    }
-
-    @Override
-    public void clearAll(boolean isNotify) {
-        //// TODO: 17-7-31
-
-    }
-
-    @Override
-    public void appendItem(Data data) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public void appendItems(List<Data> datas) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public void insertItem(int position, Data data) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public void removeItem(int position) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public void updateItem(int positon, Data data) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public void setOnItemClick(AdapterListeners.OnItemClick<Data> onItemClick) {
-        this.onItemClick=onItemClick;
-    }
-
-    @Override
-    public void setOnItemLongClick(AdapterListeners.OnItemLongClick<Data> onItemLongClick) {
-        //// TODO: 17-7-31
-    }
-
-    @Override
-    public RecyclerView getRecyclerView() {
-        //// TODO: 17-7-31
-        return null;
-    }
-
-    @Override
-    public List<Data> getDataList() {
-        //// TODO: 17-7-31
-        return null;
-    }
-
-    @Override
-    public Data getItemData(int position) {
-        if (size(listData) <= position || position < 0) {
-            return null;
-        }
-        return listData.get(position);
     }
 }

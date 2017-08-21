@@ -28,12 +28,12 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     private RecyclerView recyclerView;
 
-    private AdapterListeners.OnItemClick<Data> onItemClick;
-    private AdapterListeners.OnItemLongClick<Data> onItemLongClick;
+    protected AdapterListeners.OnItemClick<Data> onItemClick;
+    protected AdapterListeners.OnItemLongClick<Data> onItemLongClick;
     private AdapterListeners.OnHeaderClick onHeaderClick;
     private AdapterListeners.OnFooterClick onFooterClick;
 
-    private List<Data> lisData;
+    protected List<Data> listData;
     protected int layoutId;
 
     private static int UNIQUE_ID_HEADER = -1;
@@ -41,7 +41,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     private final String TAG = HeaterAdapter.this.getClass().getSimpleName();
 
     public HeaterAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
-        this.lisData = lisData;
+        this.listData = lisData;
         this.layoutId = layoutId;
     }
 
@@ -49,13 +49,21 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
         this.layoutId = layoutId;
     }
 
+    /**
+     * Attention!!
+     * just add for MultiAdapter
+     */
+    protected HeaterAdapter(List<Data> listData) {
+        this.listData = listData;
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position < size(headers)) {
             return headers.keyAt(position);
         }
-        if (footers != null && position >= size(lisData) + size(headers)) {
-            return footers.keyAt(position - size(lisData) - size(headers));
+        if (footers != null && position >= size(listData) + size(headers)) {
+            return footers.keyAt(position - size(listData) - size(headers));
         }
         return 0;
     }
@@ -63,12 +71,12 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (headers != null && headers.get(viewType, null) != null) {
-            return CommonHolder.create(parent.getContext(),headers.get(viewType));
+            return CommonHolder.create(parent.getContext(), headers.get(viewType));
         }
         if (footers != null && footers.get(viewType, null) != null) {
-            return CommonHolder.create(parent.getContext(),footers.get(viewType));
+            return CommonHolder.create(parent.getContext(), footers.get(viewType));
         }
-        return CommonHolder.create(parent.getContext(),parent, layoutId);
+        return CommonHolder.create(parent.getContext(), parent, layoutId);
     }
 
     @Override
@@ -79,14 +87,14 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
             }
             return;
         }
-        if (footers != null && position >= size(lisData) + size(headers)) {
+        if (footers != null && position >= size(listData) + size(headers)) {
             if (onFooterClick != null) {
-                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position - size(headers) - size(lisData)));
+                holder.itemView.setOnClickListener(view -> onFooterClick.onHeaderClick(view, position - size(headers) - size(listData)));
             }
             return;
         }
         //// TODO: 17-7-27 Position不是很准确
-        int layoutPosition = holder.getLayoutPosition();
+        int layoutPosition = holder.getLayoutPosition() - size(headers);
         Data data = getItemData(position);
         if (onItemClick != null) {
             holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, layoutPosition));
@@ -101,7 +109,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public int getItemCount() {
-        return size(lisData) + size(headers) + size(footers);
+        return size(listData) + size(headers) + size(footers);
     }
 
     @Override
@@ -220,17 +228,17 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     public int getDatasSize() {
-        return size(lisData);
+        return size(listData);
     }
 
-    private int size(SparseArray sparseArray) {
+    protected int size(SparseArray sparseArray) {
         if (sparseArray == null) {
             return 0;
         }
         return sparseArray.size();
     }
 
-    private int size(List list) {
+    protected int size(List list) {
         if (list == null) {
             return 0;
         }
@@ -239,11 +247,11 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void clearAll(boolean isNotify) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
             return;
         }
-        lisData.clear();
+        listData.clear();
         if (isNotify) {
             notifyDataSetChanged();
         }
@@ -251,46 +259,46 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public void appendItem(Data data) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
         }
-        lisData.add(data);
+        listData.add(data);
         notifyDataSetChanged();
     }
 
     @Override
     public void appendItems(List<Data> datas) {
-        if (lisData == null) {
-            lisData = new ArrayList<Data>();
+        if (listData == null) {
+            listData = new ArrayList<Data>();
         }
-        lisData.addAll(datas);
+        listData.addAll(datas);
         notifyDataSetChanged();
     }
 
     @Override
     public void insertItem(int position, Data data) {
-        if (size(lisData) <= position) {
+        if (size(listData) <= position) {
             return;
         }
-        lisData.add(position, data);
+        listData.add(position, data);
         notifyItemInserted(position + size(headers));
     }
 
     @Override
     public void removeItem(int position) {
-        if (size(lisData) <= position) {
+        if (size(listData) <= position) {
             return;
         }
-        lisData.remove(position);
+        listData.remove(position);
         notifyItemRemoved(position + size(headers));
     }
 
     @Override
     public void updateItem(int positon, Data data) {
-        if (size(lisData) <= positon) {
+        if (size(listData) <= positon) {
             return;
         }
-        lisData.set(positon, data);
+        listData.set(positon, data);
         notifyDataSetChanged();
     }
 
@@ -317,16 +325,16 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public List<Data> getDataList() {
-        return lisData;
+        return listData;
     }
 
     @Override
     public Data getItemData(int position) {
         position = position - size(headers);
-        if (size(lisData) <= position || position < 0) {
+        if (size(listData) <= position || position < 0) {
             return null;
         }
-        return lisData.get(position);
+        return listData.get(position);
     }
 
     @Override
