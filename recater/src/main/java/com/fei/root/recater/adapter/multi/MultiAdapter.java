@@ -120,7 +120,7 @@ public abstract class MultiAdapter<Data extends ItemModule> extends RefloadAdapt
     /**
      * 除了上述三种具体类型外,提供包装类型
      *
-     * @return true表示已消费该事件, 否则会继续执执行{@link # super.convert(CommonHolder, Data, int)}
+     * @return true表示已消费该事件, 否则会继续执执行 super.convert(CommonHolder, Data, int)
      */
     protected boolean convert(CommonHolder holder, ItemWrapper wrapper, int position) {
         return false;
