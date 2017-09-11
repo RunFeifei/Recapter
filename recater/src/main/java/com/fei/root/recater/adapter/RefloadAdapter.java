@@ -269,7 +269,6 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         isLoading = false;
         getRecyclerView().removeCallbacks(timeOutPullUp);
         addFooter(LOAD_FOOTER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshFooter));
-        scorllToBottom();
         removeFooterImmediately(false);
         if (pullUpDataAction != null) {
             pullUpDataAction.onLoadMoreSuccess();
