@@ -16,4 +16,4 @@ TODO item支持侧滑删除
 上传  
 ./gradlew clean build bintrayUpload -PbintrayUser=feifei -PbintrayKey=69175aa7101760b64a7fee5aea872d4d84d14c8c -PdryRun=false  
 引用  
-compile 'com.bintray.run:recater:1.0.3'
+compile 'com.bintray.run:recater:1.0.4'
