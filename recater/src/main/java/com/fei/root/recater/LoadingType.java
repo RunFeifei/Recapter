@@ -14,6 +14,7 @@ import static com.fei.root.recater.LoadingType.LOAD_SUCCESS;
  */
 @IntDef({LOAD_START, LOAD_ING, LOAD_FAIL, LOAD_SUCCESS,LOAD_NONE})
 public @interface LoadingType {
+    int INIT = -1;
     int LOAD_START = 0;
     int LOAD_ING = 1;
     int LOAD_FAIL = 2;
