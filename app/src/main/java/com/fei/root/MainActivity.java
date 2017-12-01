@@ -99,18 +99,12 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
     @Override
     public void onLoadMoreIng() {
         Toast.makeText(this, "onLoadMoreIng", Toast.LENGTH_SHORT).show();
-        int result = new Random(100).nextInt();
         recyclerView.postDelayed(() -> {
-            //            if (result % 2 == 0) {
-            //                commonAdapter.appendItem("load");
-            //                commonAdapter.onLoadSuccess(false);
-            //            } else if (result % 3 == 0) {
-            //                commonAdapter.onLoadNone();
-            //            } else {
-            //            }
-            commonAdapter.appendItem("load");
-            commonAdapter.onLoadSuccess(false);
-        }, 3000);
+            commonAdapter.onLoadNone();
+
+//            commonAdapter.appendItem("load");
+//            commonAdapter.onLoadSuccess(false);
+        }, 2000);
     }
 
     @Override
@@ -143,15 +137,10 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
 
     @Override
     public void onRefreshing() {
-        int result = new Random(100).nextInt();
         recyclerView.postDelayed(() -> {
-            if (result % 2 == 0) {
                 commonAdapter.appendItem("refresh");
                 commonAdapter.onLoadSuccess(true);
-            } else {
-                commonAdapter.onLoadFail(true);
-            }
-        }, 3000);
+        }, 2000);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.fei.root.recater.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -32,9 +33,10 @@ public class DefaultLoadStartView extends LinearLayout {
     }
 
     protected void init(Context context, @Nullable AttributeSet attrs) {
-        setGravity(Gravity.CENTER);
+        setGravity(Gravity.BOTTOM);
         setOrientation(HORIZONTAL);
-        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 200));
+        setBackgroundColor(Color.WHITE);
+        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 500));
 
         LayoutParams layoutParams = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1.0f);
         layoutParams.gravity = Gravity.CENTER;

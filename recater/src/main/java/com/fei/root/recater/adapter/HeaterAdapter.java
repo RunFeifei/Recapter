@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.fei.root.recater.action.HeaterAdapterAction;
 import com.fei.root.recater.listener.AdapterListeners;
+import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     protected SparseArray<View> headers;
     protected SparseArray<View> footers;
 
-    private RecyclerView recyclerView;
+    private RefloadRecyclerView recyclerView;
 
     protected AdapterListeners.OnItemClick<Data> onItemClick;
     protected AdapterListeners.OnItemLongClick<Data> onItemLongClick;
@@ -319,7 +320,7 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     @Override
-    public RecyclerView getRecyclerView() {
+    public RefloadRecyclerView getRecyclerView() {
         return recyclerView;
     }
 
@@ -340,7 +341,11 @@ public abstract class HeaterAdapter<Data> extends RecyclerView.Adapter<CommonHol
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
+        if (recyclerView instanceof RefloadRecyclerView) {
+            this.recyclerView = (RefloadRecyclerView)recyclerView;
+            return;
+        }
+        throw new IllegalStateException("need RefloadRecyclerView");
     }
 
     @Override
