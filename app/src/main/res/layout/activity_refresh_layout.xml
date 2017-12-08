@@ -1,62 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.fei.root.recater.viewgroup.PullRefreshLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
-    <ScrollView
+    <TextView
+        android:id="@+id/test2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
+        android:layout_height="100dp"
+        android:text="STOP_H"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:background="#f000f0"
+        />
+    <com.fei.root.recater.viewgroup.PullRefreshLayout
+        android:id="@+id/refresh"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/test2"
+        android:layout_above="@+id/test1"
         >
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:fillViewport="true"
             >
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="TEST1"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:background="@color/colorPrimary"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="TEST2"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:background="#f00000"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="TEST3"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:background="#00ff00"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="TEST4"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:background="#0000ff"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="TEST5"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:background="#ff0000"
-                />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:text="TEST1"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:background="@color/colorPrimary"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:text="TEST2"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:background="#f00000"
+                    />
+                <TextView
+                    android:id="@+id/test3"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:text="TEST3"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:background="#00ff00"
+                    />
+                <TextView
+                    android:id="@+id/test4"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:text="TEST4"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:background="#0000ff"
+                    />
+                <TextView
+                    android:id="@+id/test5"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:text="TEST5"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:background="#ff0000"
+                    />
+            </LinearLayout>
+        </ScrollView>
 
 
 
-</com.fei.root.recater.viewgroup.PullRefreshLayout>
+    </com.fei.root.recater.viewgroup.PullRefreshLayout>
+    <TextView
+        android:id="@+id/test1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="bottom"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:background="#f000f0"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

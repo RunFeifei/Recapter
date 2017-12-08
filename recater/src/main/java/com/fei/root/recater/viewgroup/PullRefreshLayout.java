@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -34,6 +36,7 @@ import java.util.TimerTask;
 public class PullRefreshLayout extends LinearLayout {
 
     private final int TOUCH_SLOP;
+    private OnRefreshListner onRefreshListner;
 
     private DefaultLoadIngView loadingView;
     private View contentView;
@@ -44,6 +47,7 @@ public class PullRefreshLayout extends LinearLayout {
     private float touchMoveDistance;
 
     private boolean isFirstInit = true;
+    private Timer timerStop;
 
     public PullRefreshLayout(Context context) {
         super(context);
@@ -83,6 +87,9 @@ public class PullRefreshLayout extends LinearLayout {
         touchMoveDistance = 0;
         requestLayout();
         resetLottieView();
+        if (onRefreshListner != null) {
+            onRefreshListner.onRefreshEnd();
+        }
     }
 
     private void initContentView() {
@@ -150,6 +157,10 @@ public class PullRefreshLayout extends LinearLayout {
                 boolean pullDown = moveDistance > 0;
                 boolean canPullDown = pullDown && isContentViewReadyPullDown();
                 boolean validPullDown = canPullDown && moveDistance > TOUCH_SLOP;
+                if (validPullDown && status != LoadingType.LOAD_START && onRefreshListner != null) {
+                    onRefreshListner.onRefreshStart();
+                    Log.d("onRefreshListner-->", "onRefreshStart");
+                }
                 if (validPullDown) {
                     Log.d("ACTION_MOVE-->", moveDistance + "");
                     touchMoveDistance = moveDistance - TOUCH_SLOP;
@@ -179,16 +190,13 @@ public class PullRefreshLayout extends LinearLayout {
         Log.d("onLayout-->", touchMoveDistance + "-->" + moveDistance);
         setLottieViewProgress(moveDistance);
         loadingView.layout(0, moveDistance - loadingView.getMeasuredHeight(), loadingView.getMeasuredWidth(), moveDistance);
-        contentView.layout(0, moveDistance, contentView.getMeasuredWidth(), moveDistance + contentView.getMeasuredHeight());
+        contentView.layout(0, moveDistance, contentView.getMeasuredWidth(), moveDistance + contentView.getMeasuredHeight()+loadingView.getMeasuredHeight());
     }
 
     private void onActionUp() {
-        float moveDistance = touchMoveDistance;
+        final float moveDistance = touchMoveDistance;
         float loadingViewHeight = loadingView.getMeasuredHeight();
-        boolean doLoading = moveDistance > loadingViewHeight;
-        if (doLoading) {
-            status = LoadingType.LOAD_ING;
-        }
+        final boolean doLoading = moveDistance > loadingViewHeight;
         ValueAnimator animator = ValueAnimator.ofFloat(moveDistance, doLoading ? loadingViewHeight : 0);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.setDuration(doLoading ? 300 : 100);
@@ -215,6 +223,17 @@ public class PullRefreshLayout extends LinearLayout {
                     resetInDelay(5000);
                 }
             }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                if (doLoading) {
+                    status = LoadingType.LOAD_ING;
+                    if (onRefreshListner != null) {
+                        onRefreshListner.onRefreshIng();
+                    }
+                }
+            }
         });
         animator.start();
     }
@@ -228,18 +247,53 @@ public class PullRefreshLayout extends LinearLayout {
     }
 
     private void resetInDelay(int delay) {
-        //超时恢复原样
-        new Timer().schedule(new TimerTask() {
+        if (timerStop != null) {
+            timerStop.cancel();
+        }
+        timerStop = new Timer();
+        timerStop.schedule(new TimerTask() {
             @Override
             public void run() {
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
-                        reset();
+                        if (status != LoadingType.INIT) {
+                            reset();
+                        }
                     }
                 }.obtainMessage().sendToTarget();
             }
         }, delay);
+    }
+
+
+    public void stopRefreshing() {
+        if (touchMoveDistance == 0) {
+            requestLayout();
+            return;
+        }
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(touchMoveDistance, 0);
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                touchMoveDistance = (Float) animation.getAnimatedValue();
+                requestLayout();
+            }
+        });
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                reset();
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void setOnRefreshListner(@NonNull OnRefreshListner onRefreshListner) {
+        this.onRefreshListner = onRefreshListner;
     }
 }
