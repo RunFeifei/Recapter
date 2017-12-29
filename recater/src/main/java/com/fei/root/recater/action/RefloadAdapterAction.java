@@ -6,9 +6,9 @@ package com.fei.root.recater.action;
 
 public interface RefloadAdapterAction {
 
-    void onLoadStart(float deltaY, boolean pulldown);
+    void onLoadStart( boolean pulldown);
 
-    void onLoading(boolean pulldown);
+    void onLoading();
 
     void onLoadFail(boolean pulldown);
 

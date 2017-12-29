@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Scroller;
 
 import static com.fei.root.recater.adapter.RefloadAdapter.LOAD_FOOTER_ID;
 import static com.fei.root.recater.adapter.RefloadAdapter.REFRESH_HEADER_ID;
@@ -14,6 +16,10 @@ import static com.fei.root.recater.adapter.RefloadAdapter.REFRESH_HEADER_ID;
  */
 
 public class RefloadRecyclerView extends RecyclerView {
+
+    private Scroller scroller;
+
+    private int flingsRadio=1;
 
     public RefloadRecyclerView(Context context) {
         super(context);
@@ -27,6 +33,7 @@ public class RefloadRecyclerView extends RecyclerView {
 
     private void init(Context context, @Nullable AttributeSet attrs) {
         setRecycledViewPool(new RecycledViewPools());
+        scroller = new Scroller(context, new AccelerateDecelerateInterpolator());
     }
 
     /**
@@ -48,4 +55,72 @@ public class RefloadRecyclerView extends RecyclerView {
             return super.getRecycledView(viewType);
         }
     }
+
+    public void scrollByY(int y) {
+        super.scrollBy(0, y);
+    }
+
+    public void scrollByY(int y, OnScrollByEnded onScrollByEnded) {
+        this.scrollByY(y);
+        if (onScrollByEnded == null) {
+            return;
+        }
+        onScrollByEnded.onScrollByEnded();
+    }
+
+
+    public interface OnScrollByEnded {
+        void onScrollByEnded();
+    }
+
+
+    private int sum = 0;
+    private float deltaY = 0;
+    private OnScrollByEnded onScrollByEnded;
+
+    @Override
+    public void computeScroll() {
+        if (onScrollByEnded != null && sum > deltaY) {
+            sum = 0;
+            deltaY = 0;
+            onScrollByEnded.onScrollByEnded();
+            onScrollByEnded = null;
+            if (!scroller.isFinished()) {
+                scroller.abortAnimation();
+            }
+            return;
+        }
+        if (scroller.computeScrollOffset()) {
+            int move = scroller.getCurrY();
+            scrollBy(0, move);
+            sum = sum + move;
+            invalidate();
+        }
+    }
+
+
+    public void smoothRemoveHeader(float deltaY, OnScrollByEnded onScrollByEnded) {
+        this.deltaY = deltaY;
+        this.onScrollByEnded = onScrollByEnded;
+        if (!scroller.isFinished()) {
+            scroller.abortAnimation();
+        }
+        scroller.startScroll(0, getScrollY(), 0, (int) deltaY, 3000);
+        invalidate();
+    }
+
+    public void setflingRadio(int radio){
+        this.flingsRadio = radio;
+    }
+
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+        velocityY *= flingsRadio;
+        return super.fling(velocityX, velocityY);
+    }
+
+    public int getFlingsRadio() {
+        return flingsRadio;
+    }
+
 }

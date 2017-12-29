@@ -23,6 +23,7 @@
         android:gravity="center"
         android:text="remove"
         android:onClick="onClick1"
+        android:background="@color/colorPrimary"
         />
 
     <com.fei.root.recater.view.RefloadRecyclerView

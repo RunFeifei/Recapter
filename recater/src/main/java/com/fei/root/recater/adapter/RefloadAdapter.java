@@ -1,13 +1,13 @@
 package com.fei.root.recater.adapter;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -17,7 +17,6 @@ import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.action.OnRefreshData;
 import com.fei.root.recater.action.RefloadAdapterAction;
 import com.fei.root.recater.action.RefloadViewAction;
-import com.fei.root.recater.listener.AbsAnimatorListener;
 import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
 
@@ -47,9 +46,11 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     private OnRefreshData<Data> onRefreshData;
     private OnLoadMoreData<Data> pullUpDataAction;
 
-    private static final int LOADING_TIME_OUT = 30 * 1000;
+    private static final int LOADING_TIME_OUT = 10 * 1000;
     private Runnable timeOutPullDown = () -> onLoadFail(true);
     private Runnable timeOutPullUp = () -> onLoadFail(false);
+
+    private VelocityTracker velocityTracker = VelocityTracker.obtain();
 
     public RefloadAdapter(@NonNull List<Data> lisData, @LayoutRes int layoutId) {
         super(lisData, layoutId);
@@ -144,60 +145,101 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if (getRefreshHeader() != null && isRefreshing) {
+            return true;
+        }
+        if (getRefreshHeader() == null) {
+            getRecyclerView().setflingRadio(1);
+        }
+        Log.e("TAG-->", getRecyclerView().getFlingsRadio() + "");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                resetVelocityTracker(event);
                 touchDownY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                float move = event.getRawY() - touchDownY;
-                if (isEnablePullRefreshing && !isRefreshing
-                        && !getRecyclerView().canScrollVertically(-1)
-                        && move > getTouchSlop()) {
-                    onLoadStart(event.getRawY() - touchDownY, true);
+                velocityTracker.addMovement(event);
+                velocityTracker.computeCurrentVelocity(1000);
+                float move = (event.getRawY() - touchDownY) / 3;
+                if (cantScollDown() && getRefreshHeader() == null
+                        && (move > getTouchSlop() || (velocityTracker.getYVelocity() > getScaledMinimumFlingVelocity() && move > 0))) {
+                    addStartRefreshHeader();
+                    Log.e("TAG-->1", "AAAAAAAAAAA");
+                    getRecyclerView().setflingRadio(0);
                     return true;
                 }
                 if (isEnablePullLoadMore && !isLoading
-                        && !getRecyclerView().canScrollVertically(1)
-                        && -move > 0 && isBeyondScreen) {
-                    onLoadStart(event.getRawY() - touchDownY, false);
+                        && cantScollUp()
+                        && (move < -getTouchSlop() || (velocityTracker.getYVelocity() > getScaledMinimumFlingVelocity() && move < 0)) && isBeyondScreen) {
+                    addLoadingFooter();
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_OUTSIDE:
                 if (isEnablePullRefreshing && !isRefreshing) {
-                    doRefreshing();
+                    onActionUp();
                 }
+                releaseVelocityTracker();
                 break;
         }
         return false;
     }
 
-    @Override
-    public void onLoadStart(float deltaY, boolean pulldown) {
-        if (pulldown) {
-            View view = getPullView(LoadingType.LOAD_START, refreshHeader);
-            if (view == null) {
-                return;
-            }
+    private void addStartRefreshHeader() {
+        View view = getPullView(LoadingType.LOAD_START, refreshHeader);
+        if (view == null) {
+            return;
+        }
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (getRefreshHeader() == null) {
             addHeader(REFRESH_HEADER_ID, view);
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if (layoutParams == null) {
                 layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 view.setLayoutParams(layoutParams);
             }
-            int height = Math.min((int) deltaY / 2, 300);
-            height = height <= getTouchSlop() ? 0 : height;
-            if (height == 0) {
-                removeHeaderImmediately(true);
-                return;
-            }
-            layoutParams.height = height;
-            view.setLayoutParams(layoutParams);
+            getRecyclerView().scrollBy(0, layoutParams.height);
+        }
+    }
+
+    private void addRefreshingHeader() {
+        View view = getPullView(LoadingType.LOAD_ING, refreshHeader);
+        if (view == null) {
+            return;
+        }
+        addHeader(REFRESH_HEADER_ID, view);
+        isRefreshing = true;
+        if (onRefreshData != null) {
+            onRefreshData.onRefreshing();
+        }
+        getRecyclerView().scrollBy(0, -1000);
+        getRecyclerView().removeCallbacks(timeOutPullDown);
+        getRecyclerView().postDelayed(timeOutPullDown, 5000);
+    }
+
+    private void addLoadingFooter() {
+        View view = getPullView(LoadingType.LOAD_ING, refreshFooter);
+        if (view == null) {
+            return;
+        }
+        addFooter(LOAD_FOOTER_ID, view);
+        isLoading=true;
+        scorllToBottom();
+        getRecyclerView().removeCallbacks(timeOutPullUp);
+        getRecyclerView().postDelayed(timeOutPullUp, LOADING_TIME_OUT);
+        if (pullUpDataAction != null) {
+            pullUpDataAction.onLoadMoreIng();
+        }
+    }
+
+    @Override
+    public void onLoadStart(boolean pulldown) {
+        if (pulldown) {
             return;
         }
         boolean isReadyToLoad = getFooter(LOAD_FOOTER_ID) != null;
         if (isReadyToLoad && !isLoading) {
-            getRecyclerView().postDelayed(() -> onLoading(false), 500);
+            getRecyclerView().postDelayed(() -> onLoading(), 500);
             isLoading = true;
             return;
         }
@@ -210,17 +252,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     }
 
     @Override
-    public void onLoading(boolean pullDown) {
-        if (pullDown) {
-            isRefreshing = true;
-            getRecyclerView().removeCallbacks(timeOutPullDown);
-            getRecyclerView().postDelayed(timeOutPullDown, LOADING_TIME_OUT);
-            addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_ING, refreshHeader));
-            if (onRefreshData != null) {
-                onRefreshData.onRefreshing();
-            }
-            return;
-        }
+    public void onLoading() {
         isLoading = true;
         View view = getPullView(LoadingType.LOAD_ING, refreshFooter);
         addFooter(LOAD_FOOTER_ID, view);
@@ -235,13 +267,13 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     public void onLoadFail(boolean pulldown) {
         getRecyclerView().removeCallbacks(pulldown ? timeOutPullDown : timeOutPullUp);
         if (pulldown) {
-            isRefreshing = false;
             addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_FAIL, refreshHeader));
-            scorllToTop();
             removeHeaderImmediately(false);
             if (onRefreshData != null) {
                 onRefreshData.onRefreshFail();
             }
+            isRefreshing = false;
+            scorllToTop();
             return;
         }
         isLoading = false;
@@ -269,7 +301,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         isLoading = false;
         getRecyclerView().removeCallbacks(timeOutPullUp);
         addFooter(LOAD_FOOTER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshFooter));
-        removeFooterImmediately(false);
+        removeFooterImmediately(true);
         if (pullUpDataAction != null) {
             pullUpDataAction.onLoadMoreSuccess();
         }
@@ -295,31 +327,33 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         return getHeader(LOAD_FOOTER_ID);
     }
 
-    private void doRefreshing() {
+
+    private void onActionUp() {
         final View view = getRefreshHeader();
         if (view == null) {
             return;
         }
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (layoutParams == null) {
-            layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            view.setLayoutParams(layoutParams);
+        int stratHeaderHeight = getHeaderHeight(view);
+        View view01 = getRecyclerView().getChildAt(1);
+        final boolean needRefresh = view01 != null && view01.getY() > stratHeaderHeight * 0.6f;
+        float offset = stratHeaderHeight - Math.abs(view.getY());
+        final View viewIng = getPullView(LoadingType.LOAD_ING, refreshHeader);
+        if (viewIng == null) {
+            return;
         }
-        ValueAnimator animator = ValueAnimator.ofInt(layoutParams.height, 0);
-        animator.setDuration(300).start();
-        animator.addUpdateListener((animation -> {
-            ViewGroup.LayoutParams layoutParam = view.getLayoutParams();
-            layoutParam.height = (int) animation.getAnimatedValue();
-            view.setLayoutParams(layoutParam);
-        }));
-        animator.addListener(new AbsAnimatorListener() {
+        offset = offset - (needRefresh ? getHeaderHeight(viewIng) : 0);
+        Log.e("TAG-->1", "BBBBBBBBBBBBBBB");
+
+        getRecyclerView().smoothRemoveHeader(offset, new RefloadRecyclerView.OnScrollByEnded() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                onLoading(true);
+            public void onScrollByEnded() {
+                if (needRefresh) {
+                    addRefreshingHeader();
+                    return;
+                }
+                removeHeaderImmediately(true);
             }
         });
-        animator.start();
     }
 
     private void removeHeaderImmediately(boolean immediately) {
@@ -342,6 +376,10 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         return ViewConfiguration.get(getRecyclerView().getContext()).getScaledTouchSlop();
     }
 
+    private int getScaledMinimumFlingVelocity() {
+        return ViewConfiguration.get(getRecyclerView().getContext()).getScaledMinimumFlingVelocity();
+    }
+
     public void scorllToBottom() {
         RecyclerView recyclerView = getRecyclerView();
         recyclerView.scrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
@@ -361,5 +399,42 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
 
     protected LayoutInflater getlayoutInflate(Context context) {
         return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+
+    private void releaseVelocityTracker() {
+        if (null != velocityTracker) {
+            velocityTracker.clear();
+            velocityTracker.recycle();
+            velocityTracker = null;
+        }
+    }
+
+    private void resetVelocityTracker(MotionEvent event) {
+        if (velocityTracker == null) {
+            velocityTracker = VelocityTracker.obtain();
+        } else {
+            velocityTracker.clear();
+        }
+        velocityTracker.addMovement(event);
+    }
+
+    private boolean cantScollDown() {
+        return !getRecyclerView().canScrollVertically(-1);
+    }
+
+    private boolean cantScollUp() {
+        return !getRecyclerView().canScrollVertically(1);
+    }
+
+    private int getHeaderHeight(View view) {
+        if (view == null) {
+            return 0;
+        }
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        return params.height;
     }
 }
