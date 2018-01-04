@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.fei.root.common.viewbinder.ViewBinder;
 import com.fei.root.recapter.R;
-import com.fei.root.viewbinder.ViewBinder;
 
 public class SplashActivity extends AppCompatActivity {
 

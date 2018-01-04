@@ -2,10 +2,17 @@
 
 buildscript {
     repositories {
-        jcenter()
-        mavenCentral()
+        maven {
+            url "${HTTP_MAVEN_GOOGLE}"
+        }
+        maven {
+            url "${HTTP_MAVEN_DR}"
+        }
         maven {
             url "${HTTP_MAVEN_ALI}"
+        }
+        maven {
+            url "${HTTP_MAVEN_BINTRAY}"
         }
         maven {
             url "${HTTP_MAVEN_JBOSSS}"
@@ -19,6 +26,8 @@ buildscript {
         maven {
             url "${HTTP_MAVEN_JIT}"
         }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -33,10 +42,17 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
-        mavenCentral()
+        maven {
+            url "${HTTP_MAVEN_GOOGLE}"
+        }
+        maven {
+            url "${HTTP_MAVEN_DR}"
+        }
         maven {
             url "${HTTP_MAVEN_ALI}"
+        }
+        maven {
+            url "${HTTP_MAVEN_BINTRAY}"
         }
         maven {
             url "${HTTP_MAVEN_JBOSSS}"
@@ -51,6 +67,8 @@ allprojects {
             url "${HTTP_MAVEN_JIT}"
         }
         maven { url 'https://dl.bintray.com/feifei/maven' }
+        jcenter()
+        mavenCentral()
     }
     tasks.withType(Javadoc) {
         options{ encoding "UTF-8" charSet 'UTF-8' links "http://docs.oracle.com/javase/7/docs/api" }

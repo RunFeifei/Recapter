@@ -2,7 +2,7 @@ package com.fei.root;
 
 import android.view.LayoutInflater;
 
-import com.feifei.common.MultiApplication;
+import com.fei.root.common.MultiApplication;
 
 /**
  * Created by PengFeifei on 17-7-12.

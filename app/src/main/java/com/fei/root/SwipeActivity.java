@@ -5,18 +5,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.fei.root.common.viewbinder.Binder;
+import com.fei.root.common.viewbinder.ViewBinder;
 import com.fei.root.recapter.R;
 import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.adapter.RefloadAdapter;
 import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.SwipeRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
-import com.fei.root.viewbinder.Binder;
-import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
 
-public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,OnLoadMoreData {
+public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreData {
 
     @Binder
     private SwipeRecyclerView<String> swipe;
@@ -71,7 +71,7 @@ public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayo
                 swipe.setRefreshing(false);
                 refloadAdapter.scorllToBottom();
             }
-        },3000);
+        }, 3000);
 
     }
 
@@ -84,7 +84,7 @@ public class SwipeActivity extends AppCompatActivity implements SwipeRefreshLayo
                 refloadAdapter.onLoadSuccess(false);
                 refloadAdapter.scorllToBottom();
             }
-        },3000);
+        }, 3000);
     }
 
     @Override

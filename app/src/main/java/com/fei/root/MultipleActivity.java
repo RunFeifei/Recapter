@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.fei.root.common.viewbinder.Binder;
+import com.fei.root.common.viewbinder.ViewBinder;
 import com.fei.root.multi.Cat;
 import com.fei.root.multi.Dog;
 import com.fei.root.multi.Person;
@@ -20,8 +22,6 @@ import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.DefaultRefreshHeaderView;
 import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
-import com.fei.root.viewbinder.Binder;
-import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -144,7 +144,7 @@ public class MultipleActivity extends AppCompatActivity implements OnLoadMoreDat
             }*/
             multiAdapter.appendItem(new ItemWrapper<String>("onLoadMoreIng", R.layout.item_00));
             multiAdapter.onLoadSuccess(false);
-//            multiAdapter.onLoadFail(false);
+            //            multiAdapter.onLoadFail(false);
         }, 3000);
     }
 
