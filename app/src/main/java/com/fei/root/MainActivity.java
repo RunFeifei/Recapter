@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fei.root.common.viewbinder.Binder;
+import com.fei.root.common.viewbinder.ViewBinder;
 import com.fei.root.recapter.R;
 import com.fei.root.recater.action.OnLoadMoreData;
 import com.fei.root.recater.action.OnRefreshData;
@@ -18,11 +20,8 @@ import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.DefaultRefreshHeaderView;
 import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
-import com.fei.root.viewbinder.Binder;
-import com.fei.root.viewbinder.ViewBinder;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements OnLoadMoreData<String>, OnRefreshData<String> {
 
@@ -102,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         recyclerView.postDelayed(() -> {
             commonAdapter.onLoadNone();
 
-//            commonAdapter.appendItem("load");
-//            commonAdapter.onLoadSuccess(false);
+            //            commonAdapter.appendItem("load");
+            //            commonAdapter.onLoadSuccess(false);
         }, 2000);
     }
 
@@ -138,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
     @Override
     public void onRefreshing() {
         recyclerView.postDelayed(() -> {
-                commonAdapter.appendItem("refresh");
-                commonAdapter.onLoadSuccess(true);
+            commonAdapter.appendItem("refresh");
+            commonAdapter.onLoadSuccess(true);
         }, 2000);
     }
 
