@@ -49,6 +49,9 @@ public class PullRefreshLayout extends LinearLayout {
     private boolean isFirstInit = true;
     private Timer timerStop;
 
+    protected String lottiePullAnimateName="lender4_pull.json";
+    protected String lottieRefreshAnimateName="lender4_refresh.json";
+
     public PullRefreshLayout(Context context) {
         super(context);
         TOUCH_SLOP = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -73,13 +76,13 @@ public class PullRefreshLayout extends LinearLayout {
         addView(loadingView);
         loadingView.setClickable(true);
         loadingView.setAutoPlay(false);
-        loadingView.setAnimation("lender4_pull.json");
+        loadingView.setAnimation(lottiePullAnimateName);
     }
 
     private void resetLottieView() {
         loadingView.setClickable(true);
         loadingView.setAutoPlay(false);
-        loadingView.setAnimation("lender4_pull.json");
+        loadingView.setAnimation(lottiePullAnimateName);
     }
 
     private void reset() {
@@ -123,6 +126,10 @@ public class PullRefreshLayout extends LinearLayout {
             View child = recyclerView.getChildAt(0);
             return null != child && child.getTop() >= 0;
         }
+        return isOtherContentViewReadyPullDown();
+    }
+
+    protected boolean isOtherContentViewReadyPullDown() {
         return true;
     }
 
@@ -190,7 +197,7 @@ public class PullRefreshLayout extends LinearLayout {
         Log.d("onLayout-->", touchMoveDistance + "-->" + moveDistance);
         setLottieViewProgress(moveDistance);
         loadingView.layout(0, moveDistance - loadingView.getMeasuredHeight(), loadingView.getMeasuredWidth(), moveDistance);
-        contentView.layout(0, moveDistance, contentView.getMeasuredWidth(), moveDistance + contentView.getMeasuredHeight()+loadingView.getMeasuredHeight());
+        contentView.layout(0, moveDistance, contentView.getMeasuredWidth(), moveDistance + contentView.getMeasuredHeight() + loadingView.getMeasuredHeight());
     }
 
     private void onActionUp() {
@@ -216,7 +223,7 @@ public class PullRefreshLayout extends LinearLayout {
                     if (loadingView.getLottieView().isAnimating()) {
                         loadingView.getLottieView().cancelAnimation();
                     }
-                    loadingView.setAnimation("lender4_refresh.json");
+                    loadingView.setAnimation(lottieRefreshAnimateName);
                     loadingView.getLottieView().loop(true);
                     loadingView.getLottieView().playAnimation();
                     //超时恢复原样
@@ -295,5 +302,21 @@ public class PullRefreshLayout extends LinearLayout {
 
     public void setOnRefreshListner(@NonNull OnRefreshListner onRefreshListner) {
         this.onRefreshListner = onRefreshListner;
+    }
+
+    public String getLottiePullAnimateName() {
+        return lottiePullAnimateName;
+    }
+
+    public void setLottiePullAnimateName(String lottiePullAnimateName) {
+        this.lottiePullAnimateName = lottiePullAnimateName;
+    }
+
+    public String getLottieRefreshAnimateName() {
+        return lottieRefreshAnimateName;
+    }
+
+    public void setLottieRefreshAnimateName(String lottieRefreshAnimateName) {
+        this.lottieRefreshAnimateName = lottieRefreshAnimateName;
     }
 }
