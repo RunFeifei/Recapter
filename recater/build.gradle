@@ -49,7 +49,7 @@ publish {
     userOrg = 'feifei'
     groupId = 'com.bintray.run'
     artifactId = 'recater'
-    publishVersion = '1.0.6'
+    publishVersion = '1.0.8'
 }
 
 tasks.withType(JavaCompile) {

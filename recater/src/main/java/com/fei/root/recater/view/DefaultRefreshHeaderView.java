@@ -46,4 +46,14 @@ public class DefaultRefreshHeaderView implements RefloadViewAction {
     public View onLoadNone() {
         return null;
     }
+
+    @Override
+    public void onMove(float move) {
+
+    }
+
+    @Override
+    public void onUp() {
+
+    }
 }

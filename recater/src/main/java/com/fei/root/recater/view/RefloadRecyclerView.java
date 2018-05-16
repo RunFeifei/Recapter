@@ -21,6 +21,10 @@ public class RefloadRecyclerView extends RecyclerView {
 
     private int flingsRadio=1;
 
+    private float sum = 0;
+    private float deltaY = 0;
+    private OnScrollByEnded onScrollByEnded;
+
     public RefloadRecyclerView(Context context) {
         super(context);
         init(context, null);
@@ -74,13 +78,9 @@ public class RefloadRecyclerView extends RecyclerView {
     }
 
 
-    private int sum = 0;
-    private float deltaY = 0;
-    private OnScrollByEnded onScrollByEnded;
-
     @Override
     public void computeScroll() {
-        if (onScrollByEnded != null && sum > deltaY) {
+        if (onScrollByEnded != null && sum >= deltaY) {
             sum = 0;
             deltaY = 0;
             onScrollByEnded.onScrollByEnded();

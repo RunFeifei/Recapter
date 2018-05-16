@@ -40,6 +40,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.airbnb.android:lottie:2.1.0'
     compile 'com.bintray.run:common:1.0.2'
-//    compile project(path: ':recater')
-    compile 'com.bintray.run:recater:1.0.5'
+    compile project(path: ':recater')
+//    compile 'com.bintray.run:recater:1.0.6'
 }

@@ -82,4 +82,13 @@ public class DefaultRefreshFooterView implements RefloadViewAction {
     public void onClick(View view) {
     }
 
+    @Override
+    public void onMove(float move) {
+
+    }
+
+    @Override
+    public void onUp() {
+
+    }
 }

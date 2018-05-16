@@ -18,4 +18,4 @@ DONE 嵌套scrollView进行下拉刷新
 上传  
 ./gradlew clean build bintrayUpload -PbintrayUser=feifei -PbintrayKey=69175aa7101760b64a7fee5aea872d4d84d14c8c -PdryRun=false  
 引用  
-compile 'com.bintray.run:recater:1.0.6'
+compile 'com.bintray.run:recater:1.0.8'

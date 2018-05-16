@@ -19,4 +19,8 @@ public interface RefloadViewAction {
     View onLoadNone();
 
     void onClick(View view);
+
+    void onMove(float move);
+
+    void onUp();
 }

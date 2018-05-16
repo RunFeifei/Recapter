@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -151,7 +150,6 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         if (getRefreshHeader() == null) {
             getRecyclerView().setflingRadio(1);
         }
-        Log.e("TAG-->", getRecyclerView().getFlingsRadio() + "");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 resetVelocityTracker(event);
@@ -160,11 +158,11 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             case MotionEvent.ACTION_MOVE:
                 velocityTracker.addMovement(event);
                 velocityTracker.computeCurrentVelocity(1000);
+                refreshHeader.onMove(event.getRawY() - touchDownY);
                 float move = (event.getRawY() - touchDownY) / 3;
                 if (cantScollDown() && getRefreshHeader() == null
                         && (move > getTouchSlop() || (velocityTracker.getYVelocity() > getScaledMinimumFlingVelocity() && move > 0))) {
                     addStartRefreshHeader();
-                    Log.e("TAG-->1", "AAAAAAAAAAA");
                     getRecyclerView().setflingRadio(0);
                     return true;
                 }
@@ -223,7 +221,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             return;
         }
         addFooter(LOAD_FOOTER_ID, view);
-        isLoading=true;
+        isLoading = true;
         scorllToBottom();
         getRecyclerView().removeCallbacks(timeOutPullUp);
         getRecyclerView().postDelayed(timeOutPullUp, LOADING_TIME_OUT);
@@ -290,7 +288,15 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         if (pulldown) {
             isRefreshing = false;
             getRecyclerView().removeCallbacks(timeOutPullDown);
-            addHeader(REFRESH_HEADER_ID, getPullView(LoadingType.LOAD_SUCCESS, refreshHeader));
+            View view = getPullView(LoadingType.LOAD_SUCCESS, refreshHeader);
+            if (view == null) {
+                if (onRefreshData != null) {
+                    onRefreshData.onRefreshSuccess();
+                }
+                removeHeaderImmediately(true);
+                return;
+            }
+            addHeader(REFRESH_HEADER_ID, view);
             scorllToTop();
             removeHeaderImmediately(false);
             if (onRefreshData != null) {
@@ -327,22 +333,21 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         return getHeader(LOAD_FOOTER_ID);
     }
 
-
     private void onActionUp() {
         final View view = getRefreshHeader();
         if (view == null) {
             return;
         }
+        refreshHeader.onUp();
         int stratHeaderHeight = getHeaderHeight(view);
         View view01 = getRecyclerView().getChildAt(1);
-        final boolean needRefresh = view01 != null && view01.getY() > stratHeaderHeight * 0.6f;
         float offset = stratHeaderHeight - Math.abs(view.getY());
         final View viewIng = getPullView(LoadingType.LOAD_ING, refreshHeader);
         if (viewIng == null) {
             return;
         }
+        final boolean needRefresh = view01 != null && view01.getY() >= getHeaderHeight(viewIng);
         offset = offset - (needRefresh ? getHeaderHeight(viewIng) : 0);
-        Log.e("TAG-->1", "BBBBBBBBBBBBBBB");
 
         getRecyclerView().smoothRemoveHeader(offset, new RefloadRecyclerView.OnScrollByEnded() {
             @Override
@@ -357,11 +362,20 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     }
 
     private void removeHeaderImmediately(boolean immediately) {
-        if (immediately) {
-            removeHeader(REFRESH_HEADER_ID);
-            return;
+        try {
+            getRecyclerView().smoothRemoveHeader(getRefreshHeader().getLayoutParams().height, new RefloadRecyclerView.OnScrollByEnded() {
+                @Override
+                public void onScrollByEnded() {
+                    removeHeader(REFRESH_HEADER_ID);
+                }
+            });
+        } catch (Exception e) {
+            if (immediately) {
+                removeHeader(REFRESH_HEADER_ID);
+                return;
+            }
+            getRecyclerView().postDelayed(() -> removeHeader(REFRESH_HEADER_ID), 300);
         }
-        getRecyclerView().postDelayed(() -> removeHeader(REFRESH_HEADER_ID), 1500);
     }
 
     private void removeFooterImmediately(boolean immediately) {
@@ -369,7 +383,7 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             removeFooter(LOAD_FOOTER_ID);
             return;
         }
-        getRecyclerView().postDelayed(() -> removeFooter(LOAD_FOOTER_ID), 1500);
+        getRecyclerView().postDelayed(() -> removeFooter(LOAD_FOOTER_ID), 300);
     }
 
     private int getTouchSlop() {
@@ -406,7 +420,6 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
         if (null != velocityTracker) {
             velocityTracker.clear();
             velocityTracker.recycle();
-            velocityTracker = null;
         }
     }
 
