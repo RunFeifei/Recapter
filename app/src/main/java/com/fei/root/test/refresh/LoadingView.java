@@ -2,6 +2,7 @@ package com.fei.root.test.refresh;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +14,23 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.fei.root.recapter.R;
 import com.fei.root.recater.action.RefloadViewAction;
 import com.fei.root.recater.view.DefaultLoadIngView;
-import com.fei.root.recater.view.DefaultLoadStartView;
 
 
 /**
- * Created by PengFeifei on 2018/5/14.
+ * Created by PengFeifei on 17-7-17.
  */
-public class RefreshView implements RefloadViewAction {
+
+public class LoadingView implements RefloadViewAction {
 
     private Context context;
 
-    public RefreshView(Context context) {
+    public LoadingView(Context context) {
         this.context = context;
     }
 
     @Override
     public View onLoadStart() {
-        return getTextView("释放刷新", true);
+        return getTextView("释放加载", true);
     }
 
     @Override
@@ -40,12 +41,12 @@ public class RefreshView implements RefloadViewAction {
 
     @Override
     public View onLoadFail() {
-        return getTextView("刷新失败", true);
+        return getTextView("加载失败", true);
     }
 
     @Override
     public View onLoadSuccess() {
-        return getTextView("刷新成功", true);
+        return getTextView("加载成功", true);
     }
 
     @Override

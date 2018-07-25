@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center_horizontal|bottom"
-    >
+    android:gravity="center_horizontal|bottom">
 
 
-    <TextView
-        android:id="@+id/text"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:textSize="12sp"
         android:layout_gravity="center_horizontal"
         android:gravity="bottom"
         android:layout_marginBottom="10dp"
+        android:scaleType="fitEnd"
+        app:lottie_loop="true"
         />
 
 </LinearLayout>

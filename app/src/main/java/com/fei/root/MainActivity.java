@@ -20,6 +20,7 @@ import com.fei.root.recater.view.DefaultRefreshFooterView;
 import com.fei.root.recater.view.DefaultRefreshHeaderView;
 import com.fei.root.recater.view.RefloadRecyclerView;
 import com.fei.root.recater.viewholder.CommonHolder;
+import com.fei.root.test.refresh.LoadingView;
 import com.fei.root.test.refresh.RefreshView;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnLoadMoreData<St
         };
         recyclerView.setAdapter(commonAdapter);
         commonAdapter.setRefreshHeader(new RefreshView(this));
-        commonAdapter.setLoadMoreFooter(new DefaultRefreshFooterView(this));
+        commonAdapter.setLoadMoreFooter(new LoadingView(this));
         commonAdapter.setRefreshDataListener(this);
         commonAdapter.setLoadMoreDataListener(this);
         commonAdapter.setEnablePullLoadMore(true);

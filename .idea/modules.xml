@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Recapter.iml" filepath="$PROJECT_DIR$/Recapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RecyclerViewAdapter-PullLayout.iml" filepath="$PROJECT_DIR$/RecyclerViewAdapter-PullLayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/recater/recater.iml" filepath="$PROJECT_DIR$/recater/recater.iml" />
     </modules>

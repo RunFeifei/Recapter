@@ -156,19 +156,19 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
                 touchDownY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                velocityTracker.addMovement(event);
-                velocityTracker.computeCurrentVelocity(1000);
+                getVelocityTracker().addMovement(event);
+                getVelocityTracker().computeCurrentVelocity(1000);
                 refreshHeader.onMove(event.getRawY() - touchDownY);
                 float move = (event.getRawY() - touchDownY) / 3;
                 if (cantScollDown() && getRefreshHeader() == null
-                        && (move > getTouchSlop() || (velocityTracker.getYVelocity() > getScaledMinimumFlingVelocity() && move > 0))) {
+                        && (move > getTouchSlop() || (getVelocityTracker().getYVelocity() > getScaledMinimumFlingVelocity() && move > 0))) {
                     addStartRefreshHeader();
                     getRecyclerView().setflingRadio(0);
                     return true;
                 }
                 if (isEnablePullLoadMore && !isLoading
                         && cantScollUp()
-                        && (move < -getTouchSlop() || (velocityTracker.getYVelocity() > getScaledMinimumFlingVelocity() && move < 0)) && isBeyondScreen) {
+                        && (move < -getTouchSlop() || (getVelocityTracker().getYVelocity() > getScaledMinimumFlingVelocity() && move < 0)) && isBeyondScreen) {
                     addLoadingFooter();
                     return true;
                 }
@@ -419,8 +419,14 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
     private void releaseVelocityTracker() {
         if (null != velocityTracker) {
             velocityTracker.clear();
-            velocityTracker.recycle();
         }
+    }
+
+    private VelocityTracker getVelocityTracker() {
+        if (velocityTracker == null) {
+            velocityTracker = VelocityTracker.obtain();
+        }
+        return velocityTracker;
     }
 
     private void resetVelocityTracker(MotionEvent event) {
