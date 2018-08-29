@@ -25,6 +25,8 @@
         </activity>
         <activity android:name="com.fei.root.RefreshLayoutActivity">
         </activity>
+        <activity android:name="com.fei.root.SlideTestActivity">
+        </activity>
     </application>
 
 </manifest>

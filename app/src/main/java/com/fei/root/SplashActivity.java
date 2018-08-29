@@ -16,10 +16,11 @@ public class SplashActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.activity_splash, null);
         setContentView(view);
         ViewBinder.bindViews(this, view);
+        startActivity(new Intent(this,SlideTestActivity.class));
     }
 
     public void onClick(View view) {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, SlideTestActivity.class));
     }
 
     public void onClick1(View view) {
