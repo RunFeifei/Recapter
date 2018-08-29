@@ -2,7 +2,9 @@ package com.fei.root.recater.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 
 import com.fei.root.recater.action.AdapterAction;
 import com.fei.root.recater.listener.AdapterListeners;
@@ -33,17 +35,19 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
 
     @Override
     public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return CommonHolder.create(parent.getContext(),parent, layoutId);
+        return CommonHolder.create(parent.getContext(), parent, layoutId);
     }
 
     @Override
     public void onBindViewHolder(CommonHolder holder, int position) {
-        Data data=getItemData(position);
-        if (onItemClick != null) {
-            holder.itemView.setOnClickListener(view -> onItemClick.onItemClick(data, view, position));
+        Data data = getItemData(position);
+        View itemView = holder.itemView;
+        if (itemView instanceof HorizontalScrollView) {
+            itemView = ((ViewGroup) holder.itemView).getChildAt(0);
         }
+        itemView.setOnClickListener(view -> performItemClick(data, view, position));
         if (onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(view -> onItemLongClick.onItemLongClick(data, view, position));
+            itemView.setOnLongClickListener(view -> performItemLongClick(data, view, position));
         }
         convert(holder, listData.get(position), position);
     }
@@ -155,5 +159,19 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         this.recyclerView = recyclerView;
+    }
+
+    protected void performItemClick(Data data, View v, int position) {
+        if (onItemClick == null) {
+            return;
+        }
+        onItemClick.onItemClick(data, v, position);
+    }
+
+    protected boolean performItemLongClick(Data data, View v, int position) {
+        if (onItemLongClick == null) {
+            return false;
+        }
+        return onItemLongClick.onItemLongClick(data, v, position);
     }
 }

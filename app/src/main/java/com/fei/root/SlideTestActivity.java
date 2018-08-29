@@ -5,6 +5,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.fei.root.recapter.R;
@@ -12,13 +14,14 @@ import com.fei.root.recater.adapter.CommonAdapter;
 import com.fei.root.recater.decoration.DividerDecoration;
 import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.viewholder.CommonHolder;
+import com.fei.root.test.slide.SlideAdapter;
 
 import java.util.ArrayList;
 
 public class SlideTestActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private CommonAdapter<String> commonAdapter;
+    private SlideAdapter<String> commonAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class SlideTestActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerDecoration(ContextCompat.getColor(this, R.color.colorAccent)));
 
-        commonAdapter = new CommonAdapter<String>(list, R.layout.list_item_slide) {
+        commonAdapter = new SlideAdapter<String>(list, R.layout.list_item_slide) {
             @Override
             protected void convert(CommonHolder holder, String s, int position) {
                 holder.setText(R.id.btn, s);
@@ -71,8 +74,6 @@ public class SlideTestActivity extends AppCompatActivity {
                 header.toString();
             }
         });
-
-
     }
 
 }

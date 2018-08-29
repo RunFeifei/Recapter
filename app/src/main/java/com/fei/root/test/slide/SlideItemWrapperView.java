@@ -2,11 +2,13 @@ package com.fei.root.test.slide;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -14,10 +16,13 @@ import android.widget.LinearLayout;
 /**
  * Created by PengFeifei on 2018/8/24.
  */
-public class SlideItemWrapperView extends HorizontalScrollView {
+public class SlideItemWrapperView extends HorizontalScrollView implements OnSLideAction {
 
     private ViewGroup wrapperView;
     private int SLIDE_VIEW_LENGTH;
+    private boolean isSlidedOut;
+    private int positionInList;
+    private OnSlideStatus onSlideStatus;
 
 
     public SlideItemWrapperView(Context context) {
@@ -45,6 +50,8 @@ public class SlideItemWrapperView extends HorizontalScrollView {
     private void initViews() {
         scrollTo(0, 0);
         if (wrapperView != null) {
+            View slideView = wrapperView.getChildAt(1);
+            SLIDE_VIEW_LENGTH = slideView.getMeasuredWidth();
             return;
         }
         wrapperView = (ViewGroup) getChildAt(0);
@@ -59,23 +66,13 @@ public class SlideItemWrapperView extends HorizontalScrollView {
         SLIDE_VIEW_LENGTH = slideView.getMeasuredWidth();
     }
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        initViews();
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_UP: {
-               return onActionUp();
+                return onActionUp();
             }
             case MotionEvent.ACTION_CANCEL: {
                 return onActionUp();
@@ -95,35 +92,56 @@ public class SlideItemWrapperView extends HorizontalScrollView {
 
     private boolean onActionUp() {
         int srcollX = getScrollX();
-        if (srcollX > SLIDE_VIEW_LENGTH / 2) {
-            smoothScrollTo(SLIDE_VIEW_LENGTH, 0);
-        } else {
-            reset();
-        }
+        isSlidedOut = srcollX > SLIDE_VIEW_LENGTH / 2;
+        doSlide(!isSlidedOut);
         return true;
     }
 
-    private void reset() {
-        smoothScrollTo(0, 0);
-    }
-
-
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        scrollTo(0, 0);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        scrollTo(0, 0);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        initViews();
     }
 
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        scrollTo(0, 0);
+        smoothScrollTo(0, 0);
+        initViews();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ViewParent parent = getParent();
+        if (!(parent instanceof RecyclerView)) {
+            throw new IllegalStateException("parent view is not recyclerView");
+        }
+        RecyclerView recyclerView = (RecyclerView) parent;
+        positionInList = recyclerView.getChildLayoutPosition(this);
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if (adapter instanceof OnSlideStatus) {
+            onSlideStatus = (OnSlideStatus) adapter;
+        }
+
+
+    }
+
+    @Override
+    public int getPositionInList() {
+        return positionInList;
+    }
+
+    @Override
+    public boolean isSlidedOut() {
+        return isSlidedOut;
+    }
+
+    @Override
+    public void doSlide(boolean in) {
+        smoothScrollTo(in ? 0 : SLIDE_VIEW_LENGTH, 0);
+        if ((!in) && (onSlideStatus != null)) {
+            onSlideStatus.updateLastSlideOutPosition(getPositionInList());
+        }
+    }
 }
