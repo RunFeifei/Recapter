@@ -5,16 +5,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 
 import com.fei.root.recapter.R;
-import com.fei.root.recater.adapter.CommonAdapter;
+import com.fei.root.recater.adapter.SlideAdapter;
 import com.fei.root.recater.decoration.DividerDecoration;
 import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.viewholder.CommonHolder;
-import com.fei.root.test.slide.SlideAdapter;
 
 import java.util.ArrayList;
 
@@ -72,6 +70,12 @@ public class SlideTestActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Object o, View header, int Position) {
                 header.toString();
+            }
+        });
+        commonAdapter.setOnSlideClicks(new AdapterListeners.OnSlideClick() {
+            @Override
+            public void onSlideViewClick(View[] views, int position) {
+                Log.e("TAG", "onSlideViewClick: " + position);
             }
         });
     }

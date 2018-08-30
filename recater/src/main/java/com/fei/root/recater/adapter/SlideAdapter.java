@@ -1,12 +1,12 @@
-package com.fei.root.test.slide;
+package com.fei.root.recater.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.fei.root.recater.adapter.CommonAdapter;
+import com.fei.root.recater.action.OnSLideAction;
+import com.fei.root.recater.action.OnSlideStatus;
+import com.fei.root.recater.listener.AdapterListeners;
 import com.fei.root.recater.viewholder.CommonHolder;
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
 
     private List<OnSLideAction> listHolders;
     private int lastSlidedOutPosition;
+    private AdapterListeners.OnSlideClick onSlideClicks;
 
     public SlideAdapter(List<Data> listData, int layoutId) {
         super(listData, layoutId);
@@ -26,14 +27,15 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
     }
 
     @Override
-    public CommonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CommonHolder commonHolder = super.onCreateViewHolder(parent, viewType);
-        View view = commonHolder.itemView;
+    public void onBindViewHolder(CommonHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        View view = holder.itemView;
         if (!(view instanceof OnSLideAction)) {
             throw new RuntimeException("item view not OnSLideAction");
         }
-        listHolders.add((OnSLideAction) view);
-        return commonHolder;
+        OnSLideAction onSLideAction = (OnSLideAction)view;
+        listHolders.add(onSLideAction);
+        onSLideAction.setOnSlideClicks(onSlideClicks);
     }
 
     @Override
@@ -46,11 +48,10 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
                     View childView = rv.findChildViewUnder(e.getX(), e.getY());
                     if (childView instanceof OnSLideAction) {
                         int positionTouch = rv.getChildLayoutPosition(childView);
-                        if (positionTouch != lastSlidedOutPosition) {
+                        if (positionTouch != lastSlidedOutPosition&&(listHolders.get(lastSlidedOutPosition).isSlidedOut())) {
                             listHolders.get(lastSlidedOutPosition).doSlide(true);
                         }
                     }
-
                 }
                 return false;
             }
@@ -68,5 +69,9 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
     @Override
     public void updateLastSlideOutPosition(int position) {
         this.lastSlidedOutPosition = position;
+    }
+
+    public void setOnSlideClicks(AdapterListeners.OnSlideClick onSlideClicks) {
+        this.onSlideClicks = onSlideClicks;
     }
 }

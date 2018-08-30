@@ -1,4 +1,4 @@
-package com.fei.root.test.slide;
+package com.fei.root.recater.adapter.slide;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,6 +13,10 @@ import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import com.fei.root.recater.action.OnSLideAction;
+import com.fei.root.recater.action.OnSlideStatus;
+import com.fei.root.recater.listener.AdapterListeners;
+
 /**
  * Created by PengFeifei on 2018/8/24.
  */
@@ -23,7 +27,8 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
     private boolean isSlidedOut;
     private int positionInList;
     private OnSlideStatus onSlideStatus;
-
+    private View[] slideViews;
+    private AdapterListeners.OnSlideClick onSlideClicks;
 
     public SlideItemWrapperView(Context context) {
         super(context);
@@ -64,6 +69,17 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
         }
         View slideView = wrapperView.getChildAt(1);
         SLIDE_VIEW_LENGTH = slideView.getMeasuredWidth();
+        if (slideView instanceof ViewGroup) {
+            int size = ((ViewGroup) slideView).getChildCount();
+            slideViews = new View[size];
+            for (int i = 0; i < size; i++) {
+                slideViews[i] = ((ViewGroup) slideView).getChildAt(i);
+            }
+        } else {
+            slideViews = new View[1];
+            slideViews[0] = slideView;
+        }
+        addSlideClickListener();
     }
 
 
@@ -123,8 +139,6 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
         if (adapter instanceof OnSlideStatus) {
             onSlideStatus = (OnSlideStatus) adapter;
         }
-
-
     }
 
     @Override
@@ -144,4 +158,24 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
             onSlideStatus.updateLastSlideOutPosition(getPositionInList());
         }
     }
+
+    @Override
+    public void setOnSlideClicks(AdapterListeners.OnSlideClick onSlideClicks) {
+        this.onSlideClicks = onSlideClicks;
+    }
+
+    private void addSlideClickListener() {
+        if (onSlideClicks == null) {
+            return;
+        }
+        for (int i = 0; i < slideViews.length; i++) {
+            View view = slideViews[i];
+            final int j = i;
+            view.setOnClickListener((v) -> {
+                onSlideClicks.onSlideViewClick(slideViews, j);
+                doSlide(true);
+            });
+        }
+    }
+
 }

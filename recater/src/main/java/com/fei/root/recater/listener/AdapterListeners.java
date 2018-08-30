@@ -23,4 +23,8 @@ public interface AdapterListeners {
     interface OnFooterClick {
         void onHeaderClick(View footer, int Position);
     }
+
+    interface OnSlideClick {
+        void onSlideViewClick(View[] views, int position);
+    }
 }

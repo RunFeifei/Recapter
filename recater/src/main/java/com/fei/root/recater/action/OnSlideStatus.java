@@ -1,4 +1,4 @@
-package com.fei.root.test.slide;
+package com.fei.root.recater.action;
 
 /**
  * Created by PengFeifei on 2018/8/29.
