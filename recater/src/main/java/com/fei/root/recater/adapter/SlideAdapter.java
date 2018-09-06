@@ -19,7 +19,7 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
 
     private List<OnSLideAction> listHolders;
     private int lastSlidedOutPosition;
-    private AdapterListeners.OnSlideClick onSlideClicks;
+    private AdapterListeners.OnSlideClick<Data> onSlideClicks;
 
     public SlideAdapter(List<Data> listData, int layoutId) {
         super(listData, layoutId);
@@ -31,11 +31,12 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
         super.onBindViewHolder(holder, position);
         View view = holder.itemView;
         if (!(view instanceof OnSLideAction)) {
-            throw new RuntimeException("item view not OnSLideAction");
+            throw new RuntimeException("item view not OnSlideAction");
         }
         OnSLideAction onSLideAction = (OnSLideAction) view;
         listHolders.add(onSLideAction);
-        onSLideAction.setOnSlideClicks(onSlideClicks);
+        Data data = getItemData(position);
+        onSLideAction.setOnSlideClicks(data,position,onSlideClicks);
     }
 
     @Override
@@ -73,7 +74,7 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
         this.lastSlidedOutPosition = position;
     }
 
-    public void setOnSlideClicks(AdapterListeners.OnSlideClick onSlideClicks) {
+    public void setOnSlideClicks(AdapterListeners.OnSlideClick<Data> onSlideClicks) {
         this.onSlideClicks = onSlideClicks;
     }
 }

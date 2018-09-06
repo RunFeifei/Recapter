@@ -1,11 +1,13 @@
 package com.fei.root.recater.action;
 
+import android.view.View;
+
 import com.fei.root.recater.listener.AdapterListeners;
 
 /**
  * Created by PengFeifei on 2018/8/29.
  */
-public interface OnSLideAction {
+public interface OnSLideAction<Data> {
 
     void doSlide(boolean in);
 
@@ -13,5 +15,5 @@ public interface OnSLideAction {
 
     int getPositionInList();
 
-    void setOnSlideClicks(AdapterListeners.OnSlideClick onSlideClicks);
+    void setOnSlideClicks(Data data,int position, AdapterListeners.OnSlideClick<Data> onSlideClicks);
 }

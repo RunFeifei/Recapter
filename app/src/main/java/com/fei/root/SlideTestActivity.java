@@ -72,10 +72,10 @@ public class SlideTestActivity extends AppCompatActivity {
                 header.toString();
             }
         });
-        commonAdapter.setOnSlideClicks(new AdapterListeners.OnSlideClick() {
+        commonAdapter.setOnSlideClicks(new AdapterListeners.OnSlideClick<String>() {
             @Override
-            public void onSlideViewClick(View[] views, int position) {
-                Log.e("TAG", "onSlideViewClick: " + position);
+            public void onSlideViewClick(String s, View itemView, View[] slideiews, int position) {
+
             }
         });
     }

@@ -20,7 +20,7 @@ import com.fei.root.recater.listener.AdapterListeners;
 /**
  * Created by PengFeifei on 2018/8/24.
  */
-public class SlideItemWrapperView extends HorizontalScrollView implements OnSLideAction {
+public class SlideItemWrapperView<Data> extends HorizontalScrollView implements OnSLideAction<Data> {
 
     private ViewGroup wrapperView;
     private int SLIDE_VIEW_LENGTH;
@@ -28,7 +28,9 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
     private int positionInList;
     private OnSlideStatus onSlideStatus;
     private View[] slideViews;
-    private AdapterListeners.OnSlideClick onSlideClicks;
+    private AdapterListeners.OnSlideClick<Data> onSlideClicks;
+    private Data data;
+    private int position;
 
     public SlideItemWrapperView(Context context) {
         super(context);
@@ -159,8 +161,11 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
         }
     }
 
+
     @Override
-    public void setOnSlideClicks(AdapterListeners.OnSlideClick onSlideClicks) {
+    public void setOnSlideClicks(Data data, int position, AdapterListeners.OnSlideClick<Data> onSlideClicks) {
+        this.data = data;
+        this.position = position;
         this.onSlideClicks = onSlideClicks;
     }
 
@@ -169,10 +174,10 @@ public class SlideItemWrapperView extends HorizontalScrollView implements OnSLid
             return;
         }
         for (int i = 0; i < slideViews.length; i++) {
-            View view = slideViews[i];
             final int j = i;
+            View view = slideViews[i];
             view.setOnClickListener((v) -> {
-                onSlideClicks.onSlideViewClick(slideViews, j);
+                onSlideClicks.onSlideViewClick(data, SlideItemWrapperView.this, slideViews, j);
                 doSlide(true);
             });
         }

@@ -9,11 +9,11 @@ import android.view.View;
 public interface AdapterListeners {
 
     interface OnItemClick<Data> {
-        void onItemClick(Data data, View header, int Position);
+        void onItemClick(Data data, View itemView, int Position);
     }
 
     interface OnItemLongClick<Data> {
-        boolean onItemLongClick(Data data, View header, int Position);
+        boolean onItemLongClick(Data data, View itemView, int Position);
     }
 
     interface OnHeaderClick {
@@ -24,7 +24,7 @@ public interface AdapterListeners {
         void onHeaderClick(View footer, int Position);
     }
 
-    interface OnSlideClick {
-        void onSlideViewClick(View[] views, int position);
+    interface OnSlideClick<Data> {
+        void onSlideViewClick(Data data,View itemView,View[] slideiews, int position);
     }
 }
