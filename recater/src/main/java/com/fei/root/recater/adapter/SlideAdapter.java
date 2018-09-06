@@ -33,7 +33,7 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
         if (!(view instanceof OnSLideAction)) {
             throw new RuntimeException("item view not OnSLideAction");
         }
-        OnSLideAction onSLideAction = (OnSLideAction)view;
+        OnSLideAction onSLideAction = (OnSLideAction) view;
         listHolders.add(onSLideAction);
         onSLideAction.setOnSlideClicks(onSlideClicks);
     }
@@ -48,7 +48,9 @@ public abstract class SlideAdapter<Data> extends CommonAdapter<Data> implements 
                     View childView = rv.findChildViewUnder(e.getX(), e.getY());
                     if (childView instanceof OnSLideAction) {
                         int positionTouch = rv.getChildLayoutPosition(childView);
-                        if (positionTouch != lastSlidedOutPosition&&(listHolders.get(lastSlidedOutPosition).isSlidedOut())) {
+                        if (positionTouch != lastSlidedOutPosition &&
+                                listHolders.size() > lastSlidedOutPosition &&
+                                (listHolders.get(lastSlidedOutPosition).isSlidedOut())) {
                             listHolders.get(lastSlidedOutPosition).doSlide(true);
                         }
                     }

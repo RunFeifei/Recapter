@@ -118,7 +118,7 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     @Override
-    public void setOnItemClick(AdapterListeners.OnItemClick onItemClick) {
+    public void setOnItemClick(AdapterListeners.OnItemClick<Data> onItemClick) {
         if (onItemClick == null) {
             throw new NullPointerException("onItemClick can not be null");
         }
@@ -126,7 +126,7 @@ public abstract class CommonAdapter<Data> extends RecyclerView.Adapter<CommonHol
     }
 
     @Override
-    public void setOnItemLongClick(AdapterListeners.OnItemLongClick onItemLongClick) {
+    public void setOnItemLongClick(AdapterListeners.OnItemLongClick<Data> onItemLongClick) {
         if (onItemLongClick == null) {
             throw new NullPointerException("onItemClick can not be null");
         }
