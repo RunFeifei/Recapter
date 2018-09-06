@@ -25,6 +25,6 @@ public interface AdapterListeners {
     }
 
     interface OnSlideClick<Data> {
-        void onSlideViewClick(Data data,View itemView,View[] slideiews, int position);
+        void onSlideViewClick(Data data,View itemView,int itemPosition,View[] slideViews, int slidePosition);
     }
 }

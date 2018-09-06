@@ -177,7 +177,7 @@ public class SlideItemWrapperView<Data> extends HorizontalScrollView implements 
             final int j = i;
             View view = slideViews[i];
             view.setOnClickListener((v) -> {
-                onSlideClicks.onSlideViewClick(data, SlideItemWrapperView.this, slideViews, j);
+                onSlideClicks.onSlideViewClick(data, SlideItemWrapperView.this, position,slideViews, j);
                 doSlide(true);
             });
         }
