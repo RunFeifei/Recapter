@@ -158,7 +158,9 @@ public abstract class RefloadAdapter<Data> extends HeaterAdapter<Data> implement
             case MotionEvent.ACTION_MOVE:
                 getVelocityTracker().addMovement(event);
                 getVelocityTracker().computeCurrentVelocity(1000);
-                refreshHeader.onMove(event.getRawY() - touchDownY);
+                if (refreshHeader != null) {
+                    refreshHeader.onMove(event.getRawY() - touchDownY);
+                }
                 float move = (event.getRawY() - touchDownY) / 3;
                 if (cantScollDown() && getRefreshHeader() == null
                         && (move > getTouchSlop() || (getVelocityTracker().getYVelocity() > getScaledMinimumFlingVelocity() && move > 0))) {

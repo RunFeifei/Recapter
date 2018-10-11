@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.fei.root.recater.action.OnSLideAction;
 import com.fei.root.recater.action.OnSlideStatus;
+import com.fei.root.recater.adapter.SlideAdapter;
 import com.fei.root.recater.listener.AdapterListeners;
 
 /**
@@ -31,6 +32,9 @@ public class SlideItemWrapperView<Data> extends HorizontalScrollView implements 
     private AdapterListeners.OnSlideClick<Data> onSlideClicks;
     private Data data;
     private int position;
+
+    private RecyclerView recyclerView;
+    private SlideAdapter<Data> slideAdapter;
 
     public SlideItemWrapperView(Context context) {
         super(context);
@@ -135,12 +139,14 @@ public class SlideItemWrapperView<Data> extends HorizontalScrollView implements 
         if (!(parent instanceof RecyclerView)) {
             throw new IllegalStateException("parent view is not recyclerView");
         }
-        RecyclerView recyclerView = (RecyclerView) parent;
+        recyclerView = (RecyclerView) parent;
         positionInList = recyclerView.getChildLayoutPosition(this);
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
-        if (adapter instanceof OnSlideStatus) {
-            onSlideStatus = (OnSlideStatus) adapter;
+        if (!(adapter instanceof SlideAdapter)) {
+            throw new IllegalStateException("adapter is not SlideAdapter");
         }
+        onSlideStatus = (OnSlideStatus) adapter;
+        slideAdapter = (SlideAdapter<Data>) adapter;
     }
 
     @Override
@@ -177,7 +183,7 @@ public class SlideItemWrapperView<Data> extends HorizontalScrollView implements 
             final int j = i;
             View view = slideViews[i];
             view.setOnClickListener((v) -> {
-                onSlideClicks.onSlideViewClick(data, SlideItemWrapperView.this, position,slideViews, j);
+                onSlideClicks.onSlideViewClick(slideAdapter, recyclerView, data, SlideItemWrapperView.this, position, slideViews, j);
                 doSlide(true);
             });
         }

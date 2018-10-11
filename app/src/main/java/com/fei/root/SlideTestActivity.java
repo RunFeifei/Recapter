@@ -74,7 +74,8 @@ public class SlideTestActivity extends AppCompatActivity {
         });
         commonAdapter.setOnSlideClicks(new AdapterListeners.OnSlideClick<String>() {
             @Override
-            public void onSlideViewClick(String s, View itemView, int itemPosition, View[] slideViews, int slidePosition) {
+            public void onSlideViewClick(SlideAdapter<String> adapter, RecyclerView recyclerView, String s, View itemView, int itemPosition, View[]
+                    slideViews, int slidePosition) {
 
             }
         });
